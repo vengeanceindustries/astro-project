@@ -1,7 +1,6 @@
 ---
 import HeaderNavItem from "./HeaderNavItem.astro";
 
-// const { description = "This is an Astro project", title } = Astro.props;
 const items = [
 	{ href: "/", text: "Home" },
 	{ href: "/about", text: "About" },
@@ -10,7 +9,9 @@ const items = [
 ---
 
 <!-- Header.Nav -->
-<nav class="text-center m-auto py-2 px-4 bg-black/30">
+<nav
+	class="sticky inset-0 bottom-auto text-center m-auto py-2 px-4 bg-black/30"
+>
 	<ul class="flex justify-center gap-4 m-auto">
 		{
 			items.map((item) => (
