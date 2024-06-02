@@ -1,5 +1,6 @@
 {
 	"name": "astro-project",
+	"description": "AstroJS orchestration app with React islands & Tailwind styles",
 	"type": "module",
 	"version": "0.0.1",
 	"scripts": {
