@@ -1,0 +1,85 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MyReactComponent from "../components/MyReactComponent";
+import SetHtml from "../components/SetHtml.astro";
+import Checkbox from "../components/Checkbox.astro";
+---
+
+<Layout title="About my Astro project">
+	<main>
+		<h1 class="my-12"
+			>About <span class="text-gradient">My Project</span></h1
+		>
+		<p>Hey there! Welcome to my Astro project!</p>
+		<p>Here we'll share everything about Astro</p>
+		<SetHtml />
+		<SetHtml
+			htmlString=`<p>It's real, <u>raw</u>, <strong>HTML</strong> <em>content</em>!! (<a href="mailto:me@home.com">Email us to find out more</a>)</p>`
+		/>
+		<p>Hey there! Welcome to my Astro project!</p>
+		<p>Here we'll share everything about Astro</p>
+		<MyReactComponent className="my-8" />
+		<p>(It was rendered statically like all Astro content)</p>
+		<MyReactComponent
+			className="bg-purple-300 text-black my-12"
+			client:load
+		>
+			"client:load"
+		</MyReactComponent>
+		<p>Hey there! Welcome to my Astro project!</p>
+		<p>Here we'll share everything about Astro</p>
+		<p>Hey there! Welcome to my Astro project!</p>
+		<p>Here we'll share everything about Astro</p>
+		<p>Hey there! Welcome to my Astro project!</p>
+		<Checkbox label="Checkbox" name="checkbox" class="my-6" />
+		<p>Here we'll share everything about Astro</p>
+		<p>Hey there! Welcome to my Astro project!</p>
+		<p>Here we'll share everything about Astro</p>
+		<p>Hey there! Welcome to my Astro project!</p>
+		<p>Here we'll share everything about Astro</p>
+		<p>Hey there! Welcome to my Astro project!</p>
+		<p>Here we'll share everything about Astro</p>
+		<p>Hey there! Welcome to my Astro project!</p>
+		<p>Here we'll share everything about Astro</p>
+		<p>Hey there! Welcome to my Astro project!</p>
+		<p>Here we'll share everything about Astro</p>
+		<p>Hey there! Welcome to my Astro project!</p>
+		<p>Here we'll share everything about Astro</p>
+		<p>Hey there! Welcome to my Astro project!</p>
+		<p>Here we'll share everything about Astro</p>
+		<p>Hey there! Welcome to my Astro project!</p>
+		<p>Here we'll share everything about Astro</p>
+		<MyReactComponent className="my-8" client:visible>
+			"client:visible"
+		</MyReactComponent>
+		<p>Hey there! Welcome to my Astro project!</p>
+		<p>Here we'll share everything about Astro</p>
+		<p>Hey there! Welcome to my Astro project!</p>
+		<p>Here we'll share everything about Astro</p>
+		<p>Hey there! Welcome to my Astro project!</p>
+		<p>Here we'll share everything about Astro</p>
+		<p>Hey there! Welcome to my Astro project!</p>
+		<p>Here we'll share everything about Astro</p>
+		<MyReactComponent
+			className="bg-purple-300 text-black my-12"
+			client:only="react"
+		>
+			client:only="react"
+		</MyReactComponent>
+
+		<hr class="my-8" />
+		<p class="my-4">
+			<a href="/" class="">Go back <strong>Home</strong></a></p
+		>
+	</main>
+</Layout>
+
+<style>
+	h1 {
+		font-size: 4rem;
+		font-weight: 700;
+		line-height: 1;
+		text-align: center;
+		margin-bottom: 1em;
+	}
+</style>

@@ -1,0 +1,7 @@
+---
+const {
+	htmlString = `<p>Real, <strong>raw</strong>, <em>HTML</em> <u>content</u> &#8212; just for you!</p>`,
+} = Astro.props;
+---
+
+<Fragment set:html={htmlString} />
