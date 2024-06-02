@@ -8,10 +8,6 @@ export type RequireSome<T, P extends keyof T> = Omit<T, P> &
 export type Props = RequireSome<HTMLAttributes<"input">, "name"> & {
 	label: string;
 };
-// export type Props = HTMLAttributes<"input"> & {
-// 	label: string;
-// 	name: string;
-// };
 
 const { label, name, id = name, class: className, ...attrs } = Astro.props;
 ---
