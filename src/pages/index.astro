@@ -8,7 +8,9 @@ import MyComponent from "../components/MyComponent.astro";
 <Layout title="Welcome to Astro.">
 	<main>
 		<AstroLogo />
-		<h1>Welcome to <span class="text-gradient">My Project</span></h1>
+		<h1 class="my-16">
+			Welcome to <span class="text-gradient">My Project</span>
+		</h1>
 		<p class="instructions">
 			To get started, open the directory <code>src/pages</code> in your project.<br
 			/>
@@ -17,10 +19,11 @@ import MyComponent from "../components/MyComponent.astro";
 		</p>
 		<!-- <MyReactComponent client:load /> -->
 		<MyComponent prefix="What is up?" />
-		<a href="/about" class="text-blue-200"
-			>Learn more <strong>About</strong> this project</a
-		>
-
+		<p class="mb-6">
+			<a href="/about" class="text-blue-200">
+				Learn more <strong>About</strong> this project
+			</a>
+		</p>
 		<ul role="list" class="link-card-grid">
 			<Card
 				href="https://docs.astro.build/"
@@ -52,7 +55,6 @@ import MyComponent from "../components/MyComponent.astro";
 		font-weight: 700;
 		line-height: 1;
 		text-align: center;
-		margin-bottom: 1em;
 	}
 	.instructions {
 		margin-bottom: 2rem;
