@@ -1,0 +1,33 @@
+---
+import Layout from "../layouts/Layout.astro";
+const response = await fetch("https://randomuser.me/api/");
+const data = await response.json();
+const randomUser = data.results[0];
+---
+
+<!-- Data fetched at build can be rendered in HTML -->
+<Layout title="My Astro Blog">
+	<main>
+		<h1 class="text-5xl font-bold text-center my-16"
+			>Welcome to my <span
+				class="bg-clip-text text-transparent bg-blue-purple-gradient"
+				>Astro Blog</span
+			>!</h1
+		>
+		<p>Here we'll share everything about blogging with AstroJS</p>
+
+		<h2>User: {randomUser.name.first} {randomUser.name.last}</h2>
+		<pre class="text-sm [tab-size:1.25em]"
+			>{JSON.stringify(randomUser, null, '\t')}</pre
+		>
+		<!-- Data fetched at build can be passed to components as props -->
+		<!-- <Contact client:load email={randomUser.email} />
+		<Location city={randomUser.location.city} /> -->
+	</main>
+</Layout>
+
+<style>
+	h1 {
+		/* @apply text-center bg-clip-text text-transparent; */
+	}
+</style>
