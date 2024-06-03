@@ -1,10 +1,30 @@
----
-// Write your component code in this file!
-interface Props {
-	prefix?: string;
-}
----
+<!-- Wrap the component elements in our custom element “astro-heart”. -->
+<astro-heart>
+	<button aria-label="Heart" class="bg-purple-900/50 py-2 px-4 rounded mb-4"
+		>💜 × <strong>0</strong></button
+	>
+</astro-heart>
 
-<div class="bg-purple-900 py-2 px-4 rounded mb-4">
-	{Astro.props.prefix} My special component</div
->
+<script>
+	// Define the behaviour for our new type of HTML element.
+	class AstroHeart extends HTMLElement {
+		constructor() {
+			super();
+			let count = 0;
+
+			const heartButton = this.querySelector("button");
+			const countElem = this.querySelector("strong");
+
+			// Each time the button is clicked, update the count.
+			heartButton?.addEventListener("click", () => {
+				count++;
+				if (countElem) {
+					countElem.textContent = count.toString();
+				}
+			});
+		}
+	}
+
+	// Tell the browser to use our AstroHeart class for <astro-heart> elements.
+	customElements.define("astro-heart", AstroHeart);
+</script>
