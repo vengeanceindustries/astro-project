@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import AstroLogo from "../components/AstroLogo.astro";
 import Card from "../components/Card.astro";
 import MyComponent from "../components/MyComponent.astro";
+import ViewCounter from "../components/ViewCounter.astro";
 ---
 
 <Layout title="Welcome to Astro.">
@@ -17,6 +18,7 @@ import MyComponent from "../components/MyComponent.astro";
 			<strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message
 			above.
 		</p>
+		<ViewCounter />
 		<MyComponent prefix="What is up?" />
 		<p class="mb-6">
 			<a href="/about" class="">

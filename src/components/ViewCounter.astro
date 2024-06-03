@@ -1,0 +1,17 @@
+---
+let counter = 0;
+// if (Astro.cookies.has("counter")) {
+const cookie = Astro.cookies.get("counter");
+if (cookie) {
+	counter = cookie.number() + 1;
+}
+
+Astro.cookies.set("counter", counter.toString());
+---
+
+<div>
+	<span
+		class="inline-flex bg-black border border-neutral-600 mb-2 py-1 px-3 rounded text-center"
+		>Page Views:&nbsp; <strong>{counter}</strong></span
+	>
+</div>
