@@ -1,0 +1,37 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+
+const sku = Astro.params.sku?.split(".html")?.[0] || "";
+const name = Astro.params.name?.replace(/-/g, " ");
+const route = `${Astro.url.origin}/product.json?sku=${sku}`;
+const data = await fetch(route).then((r) => r.json());
+
+const searchParams = Astro.url.searchParams;
+console.log("searchParams?", searchParams.keys());
+// console.log("URL?", Astro.url);
+console.log("Astro?", {
+	currentLocale: Astro.currentLocale,
+	// locals: Astro.locals, // integrations, eg netlify
+	// params: Astro.params,
+	// props: Astro.props,
+	preferredLocale: Astro.preferredLocale,
+	preferredLocaleList: Astro.preferredLocaleList,
+	// redirect: Astro.redirect, // func
+	// redirect: Astro.redirect, // func
+	// request: Astro.request,
+	// response: Astro.response,
+	// rewrite: Astro.rewrite, // func
+	site: Astro.site,
+	// slots: Astro.slots,
+	// url: Astro.url,
+});
+---
+
+<Layout title={data.model.name}>
+	<!-- <title slot="head">{data.model.name} | Foot Locker</title> -->
+
+	<h1 class="text-2xl">Name: {data.model.name}</h1>
+	<h2 class="text-xl">sku: {data.style.sku}</h2>
+	<h3 class="text-xl">size: {searchParams.get("size")}</h3>
+	<pre class="text-xs">{JSON.stringify(data, null, '\t')}</pre>
+</Layout>
