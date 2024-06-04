@@ -12,7 +12,7 @@ export async function GET({ currentLocale, url }: APIContext) {
 		query: url.searchParams.get("query"),
 		pageSize: url.searchParams.get("pageSize") || 48,
 		pageType: url.searchParams.get("pageType") || "search",
-		sort: url.searchParams.get("sort"),
+		sort: url.searchParams.get("sort") || "relevance",
 	});
 	const route = `${baseRoute}?${searchParams}`;
 
