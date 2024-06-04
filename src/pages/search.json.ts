@@ -1,10 +1,7 @@
-import { APIRoute } from "astro";
+import { APIContext } from "astro";
+import { objectToParams } from "../utils/search";
 
-export function objectToParams(obj: Record<string, any>) {
-	return new URLSearchParams(obj).toString();
-}
-
-export const GET: APIRoute = async ({ request, currentLocale, url }) => {
+export async function GET({ currentLocale, redirect, url }: APIContext) {
 	const bannerDomain = "https://www.uat2.origin.footlocker.com";
 	const baseRoute = `${bannerDomain}/zgw/search-core/products/v2/search`;
 
@@ -18,7 +15,7 @@ export const GET: APIRoute = async ({ request, currentLocale, url }) => {
 	});
 	const route = `${baseRoute}?${searchParams}`;
 
-	const headers: HeadersInit = { "x-api-lang": currentLocale || "en" };
+	const headers: HeadersInit = { "x-api-lang": currentLocale || "en-US" };
 
 	const results = await fetch(route, { headers }).then((r) => r.json());
 
@@ -35,4 +32,4 @@ export const GET: APIRoute = async ({ request, currentLocale, url }) => {
 			"Content-Type": "application/json",
 		},
 	});
-};
+}
