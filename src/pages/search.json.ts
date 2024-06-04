@@ -1,8 +1,9 @@
 import { APIContext } from "astro";
+import { getBannerDomain } from "../utils/banner.configs";
 import { objectToParams } from "../utils/search";
 
 export async function GET({ currentLocale, redirect, url }: APIContext) {
-	const bannerDomain = "https://www.uat2.origin.footlocker.com";
+	const bannerDomain = getBannerDomain();
 	const baseRoute = `${bannerDomain}/zgw/search-core/products/v2/search`;
 
 	// const searchParams = url.searchParams.toString();
