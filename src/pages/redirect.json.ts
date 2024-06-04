@@ -29,6 +29,9 @@ export async function GET({ currentLocale, redirect, url }: APIContext) {
 
 	return new Response(JSON.stringify(results), {
 		status: 200,
-		headers: { "Content-Type": "application/json" },
+		headers: {
+			"Content-Type": "application/json",
+			...(import.meta.env.DEV && { "x-banner-route": route }),
+		},
 	});
 }

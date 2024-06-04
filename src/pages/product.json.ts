@@ -1,6 +1,6 @@
 import { getBannerDomain } from "../utils/banner.configs";
 
-export async function GET({ params, request, site, url }) {
+export async function GET({ currentLocale, url }) {
 	const model = url.searchParams.get("model");
 	const sku = url.searchParams.get("sku");
 
@@ -10,19 +10,22 @@ export async function GET({ params, request, site, url }) {
 		? `${baseRoute}/sku/${sku}`
 		: `${baseRoute}/model/${model}`;
 
-	const product = await fetch(route).then((r) => r.json());
+	const headers: HeadersInit = { "x-api-lang": currentLocale || "en-US" };
 
-	if (!product) {
+	const results = await fetch(route, { headers }).then((r) => r.json());
+
+	if (!results) {
 		return new Response(null, {
 			status: 404,
 			statusText: "Not found",
 		});
 	}
 
-	return new Response(JSON.stringify(product), {
+	return new Response(JSON.stringify(results), {
 		status: 200,
 		headers: {
 			"Content-Type": "application/json",
+			...(import.meta.env.DEV && { "x-banner-route": route }),
 		},
 	});
 }

@@ -2,7 +2,7 @@ import { APIContext } from "astro";
 import { getBannerDomain } from "../utils/banner.configs";
 import { objectToParams } from "../utils/search";
 
-export async function GET({ currentLocale, redirect, url }: APIContext) {
+export async function GET({ currentLocale, url }: APIContext) {
 	const bannerDomain = getBannerDomain();
 	const baseRoute = `${bannerDomain}/zgw/search-core/products/v2/search`;
 
@@ -31,6 +31,7 @@ export async function GET({ currentLocale, redirect, url }: APIContext) {
 		status: 200,
 		headers: {
 			"Content-Type": "application/json",
+			...(import.meta.env.DEV && { "x-banner-route": route }),
 		},
 	});
 }
