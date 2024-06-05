@@ -1,18 +1,20 @@
 import type { APIContext } from "astro";
 import { getBannerDomain } from "@utils/banner.configs";
 
-export async function GET({ currentLocale, url }: APIContext) {
+export async function GET({ currentLocale, site, url }: APIContext) {
 	const model = url.searchParams.get("model");
 	const sku = url.searchParams.get("sku");
 
 	const bannerDomain = getBannerDomain();
-	const baseRoute = `${bannerDomain}/zgw/product-core/v1/pdp/`;
+	const requestHost = bannerDomain; // url.origin || site || bannerDomain;
+	const baseRoute = `${requestHost}/zgw/product-core/v1/pdp/`;
 	const route = sku
 		? `${baseRoute}/sku/${sku}`
 		: `${baseRoute}/model/${model}`;
 
 	const headers: HeadersInit = { "x-api-lang": currentLocale || "en-US" };
 
+	// console.log("GET /product.json", { bannerDomain, requestHost, route });
 	const results = await fetch(route, { headers }).then((r) => r.json());
 
 	if (!results) {

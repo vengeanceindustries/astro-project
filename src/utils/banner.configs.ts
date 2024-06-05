@@ -29,10 +29,12 @@ export const banners = {
 	},
 };
 
+export const BANNER_DEFAULT = "FL";
+
 export function getBanner(
 	id: keyof typeof banners | string
 ): typeof banners.FL {
-	return banners[id as keyof typeof banners] || banners.FL;
+	return banners[id as keyof typeof banners] || banners[BANNER_DEFAULT];
 }
 
 export function getBannerDomain() {
@@ -44,4 +46,14 @@ export function getBannerDomain() {
 	const host = getBanner(banner).host; // "footlocker.com"; // based on banner
 
 	return `https://www.${subdomains}${host}`;
+}
+
+export function getBannerConfigFromHost(hostname: string) {
+	const obj = Object.values(banners).find((b) => b.host === hostname);
+	return obj || banners[BANNER_DEFAULT];
+}
+
+export function getBannerFromHost(hostname: string) {
+	const obj = Object.values(banners).find((b) => b.host === hostname);
+	return obj?.siteId || BANNER_DEFAULT;
 }

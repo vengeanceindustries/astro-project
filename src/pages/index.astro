@@ -4,10 +4,14 @@ import AstroLogo from "@components/AstroLogo.astro";
 import Card from "@components/Card.astro";
 import MyComponent from "@components/MyComponent.astro";
 import ViewCounter from "@components/ViewCounter.astro";
+
+const data = Astro.locals;
 ---
 
 <Layout title="Welcome to Astro.">
 	<main>
+		<pre>{data.title}</pre>
+		<p>PRIVATE INFO about the current user</p>
 		<AstroLogo />
 		<h1 class="my-16">
 			Welcome to <span class="text-gradient">My Project</span>
