@@ -17,5 +17,6 @@ export default defineConfig({
 			// applyBaseStyles: false,
 		}),
 	],
+	server: { headers: {}, open: "/" },
 	site: "https://www.footlocker.com", // @TODO: an integration that handles this per banner?
 });
