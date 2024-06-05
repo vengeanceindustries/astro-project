@@ -1,6 +1,6 @@
-import { APIContext } from "astro";
-import { getBannerDomain } from "../utils/banner.configs";
-import { objectToParams } from "../utils/search";
+import type { APIContext } from "astro";
+import { getBannerDomain } from "@utils/banner.configs";
+import { objectToParams } from "@utils/search";
 
 export async function GET({ currentLocale, redirect, url }: APIContext) {
 	const bannerDomain = getBannerDomain();

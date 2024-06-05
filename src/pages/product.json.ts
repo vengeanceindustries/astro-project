@@ -1,6 +1,7 @@
-import { getBannerDomain } from "../utils/banner.configs";
+import type { APIContext } from "astro";
+import { getBannerDomain } from "@utils/banner.configs";
 
-export async function GET({ currentLocale, url }) {
+export async function GET({ currentLocale, url }: APIContext) {
 	const model = url.searchParams.get("model");
 	const sku = url.searchParams.get("sku");
 

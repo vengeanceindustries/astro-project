@@ -32,7 +32,7 @@ export const banners = {
 export function getBanner(
 	id: keyof typeof banners | string
 ): typeof banners.FL {
-	return banners[id] || banners.FL;
+	return banners[id as keyof typeof banners] || banners.FL;
 }
 
 export function getBannerDomain() {
