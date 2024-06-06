@@ -1,13 +1,12 @@
 import type { APIContext } from "astro";
 import { getBannerDomain } from "@utils/banner.configs";
 
-export async function GET({ cookies, currentLocale, site, url }: APIContext) {
+export async function GET({ cookies, currentLocale, url }: APIContext) {
 	const model = url.searchParams.get("model");
 	const sku = url.searchParams.get("sku");
 
-	const bannerDomain = getBannerDomain(cookies);
-	const requestHost = bannerDomain; // url.origin; // url.origin || site || bannerDomain;
-	const baseRoute = `${requestHost}/zgw/product-core/v1/pdp/`;
+	const bannerDomain = getBannerDomain(cookies); // url.origin || site || bannerDomain;
+	const baseRoute = `${bannerDomain}/zgw/product-core/v1/pdp/`;
 	const route = sku
 		? `${baseRoute}/sku/${sku}`
 		: `${baseRoute}/model/${model}`;
@@ -28,7 +27,7 @@ export async function GET({ cookies, currentLocale, site, url }: APIContext) {
 		status: 200,
 		headers: {
 			"Content-Type": "application/json",
-			...(import.meta.env.DEV && { "x-banner-route": route }),
+			...(import.meta.env.DEV && { "x-banner-route": route }), // debugging
 		},
 	});
 }

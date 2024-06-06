@@ -2,11 +2,12 @@
 import Layout from "@layouts/Layout.astro";
 
 const sku = Astro.params.sku?.split(".html")?.[0] || "";
-const name = Astro.params.name?.replace(/-/g, " ");
-const route = `${Astro.url.origin}/product.json?sku=${sku}`;
+// const name = Astro.params.name?.replace(/-/g, " ");
+const route = `${Astro.url.origin}/api/product.json?sku=${sku}`;
 const data = await fetch(route).then((r) => r.json());
 
 const searchParams = Astro.url.searchParams;
+const selectedSize = searchParams.get("size");
 // console.log("searchParams?", searchParams.keys());
 ---
 
@@ -14,6 +15,6 @@ const searchParams = Astro.url.searchParams;
 	<!-- <title slot="head">{data.model.name} | Foot Locker</title> -->
 	<h1 class="text-2xl">Name: {data.model.name}</h1>
 	<h2 class="text-xl">sku: {data.style.sku}</h2>
-	<h3 class="text-xl">size: {searchParams.get("size")}</h3>
+	<h3 class="text-xl">size: {selectedSize}</h3>
 	<pre class="text-xs">{JSON.stringify(data, null, '\t')}</pre>
 </Layout>
