@@ -3,7 +3,8 @@ import Layout from "@layouts/Layout.astro";
 
 const sku = Astro.params.sku?.split(".html")?.[0] || "";
 // const name = Astro.params.name?.replace(/-/g, " ");
-const route = `${Astro.url.origin}/api/product.json?sku=${sku}`;
+// const route = `${Astro.url.origin}/api/product.json?sku=${sku}`;
+const route = `${Astro.url.origin}/product/details.json?sku=${sku}`;
 const data = await fetch(route).then((r) => r.json());
 
 const searchParams = Astro.url.searchParams;
