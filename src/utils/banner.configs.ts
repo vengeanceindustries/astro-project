@@ -1,3 +1,5 @@
+import type { APIContext } from "astro";
+
 export const banners = {
 	CS: {
 		bannerType: "CS",
@@ -37,12 +39,15 @@ export function getBanner(
 	return banners[id as keyof typeof banners] || banners[BANNER_DEFAULT];
 }
 
-export function getBannerDomain() {
+export function getBannerDomain(cookies?: APIContext["cookies"]) {
 	// const bannerDomain = "https://www.uat2.origin.footlocker.com";
 	const remote = import.meta.env.PUBLIC_REMOTE || "uat2";
 	const subdomains = import.meta.env.PROD ? "" : `${remote}.origin.`;
 
-	const banner = import.meta.env.PUBLIC_BANNER;
+	const cookie = cookies?.get("FL_BANNER_ID")?.value;
+	console.log("getBannerDomain", { cookie });
+
+	const banner = cookie || import.meta.env.PUBLIC_BANNER;
 	const host = getBanner(banner).host; // "footlocker.com"; // based on banner
 
 	return `https://www.${subdomains}${host}`;

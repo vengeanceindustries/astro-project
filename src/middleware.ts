@@ -1,19 +1,26 @@
-import { getBannerDomain, getBannerFromHost } from "@utils/banner.configs";
+import {
+	getBannerConfigFromHost,
+	getBannerDomain,
+} from "@utils/banner.configs";
 import { defineMiddleware, sequence } from "astro:middleware";
 
 const bannerDetection = defineMiddleware(async (context, next) => {
 	const cookie = context.cookies.get("FL_BANNER_ID")?.value;
 	console.log("bannerDetection request", { cookie });
 
-	const banner = getBannerFromHost(context.url.hostname);
+	const bannerObj = getBannerConfigFromHost(context.url.hostname);
+	const banner = bannerObj.siteId; // getBannerFromHost(context.url.hostname);
 	context.cookies.set("FL_BANNER_ID", banner);
 
 	const headers = context.request.headers;
+	const bannerDomain = getBannerDomain(context.cookies);
+	// context.url.host = bannerDomain; // `www.${bannerObj.host}`;
 
-	const bannerDomain = getBannerDomain();
 	const href = context.url.href;
 	console.log("middleware", {
 		bannerDomain,
+		bannerObj,
+		// cookies: headers.get('cookies'),
 		href,
 		// "accept-language": headers.get("accept-language"),
 		// "user-agent": headers.get("user-agent"),

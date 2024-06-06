@@ -1,12 +1,12 @@
 import type { APIContext } from "astro";
 import { getBannerDomain } from "@utils/banner.configs";
 
-export async function GET({ currentLocale, site, url }: APIContext) {
+export async function GET({ cookies, currentLocale, site, url }: APIContext) {
 	const model = url.searchParams.get("model");
 	const sku = url.searchParams.get("sku");
 
-	const bannerDomain = getBannerDomain();
-	const requestHost = bannerDomain; // url.origin || site || bannerDomain;
+	const bannerDomain = getBannerDomain(cookies);
+	const requestHost = bannerDomain; // url.origin; // url.origin || site || bannerDomain;
 	const baseRoute = `${requestHost}/zgw/product-core/v1/pdp/`;
 	const route = sku
 		? `${baseRoute}/sku/${sku}`
