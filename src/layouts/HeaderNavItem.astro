@@ -1,8 +1,50 @@
 ---
-const { href, text } = Astro.props;
+export interface CategoryLink {
+	text: string;
+	url: string;
+	shopAll: boolean;
+}
+export interface SectionCategory {
+	expandByDefault: boolean;
+	hidden: boolean;
+	linkPath?: string;
+	links: Array<CategoryLink>;
+	name: string;
+	style?: "boxes";
+	// 'sub-categories': Array<any>;
+	type: "icons" | "list" | "promoLinks" | string;
+}
+export interface Props {
+	categories?: Array<SectionCategory>;
+	linkPath?: string;
+	name: string;
+}
+const { linkPath, name, categories } = Astro.props;
+// if (categories?.length) {
+// 	console.log("categories:", categories);
+// }
+
+// const links = categories?.find((cat) => cat.links?.length)?.links;
+// if (links) {
+// 	// console.log("links:", Array.isArray(links) ? "array" : typeof links);
+// 	console.log("links:", links[0]);
+// }
 ---
 
-<a
-	class="underline-offset-8 hover:underline-offset-4 hover:decoration-2 transition-all"
-	href={href}>{text}</a
->
+{
+	linkPath ? (
+		<a
+			class="underline-offset-8 hover:underline-offset-4 hover:decoration-2 transition-all"
+			href={linkPath}
+		>
+			{name}
+		</a>
+	) : (
+		<button>{name}</button>
+	)
+}
+<!-- {
+	categories?.length && (
+		<pre>{JSON.stringify(categories, null, "\t")}</pre>
+	)
+} -->

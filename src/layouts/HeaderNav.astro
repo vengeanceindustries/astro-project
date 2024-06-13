@@ -1,21 +1,23 @@
 ---
 import HeaderNavItem from "./HeaderNavItem.astro";
 
-const items = [
-	{ href: "/", text: "Home" },
-	{ href: "/about", text: "About" },
-	{ href: "/blog", text: "Blog" },
-];
+const route = `${Astro.url.origin}/api/header.json`;
+const results = await fetch(route).then((r) => r.json());
+// console.log("HeaderNav results:", results);
+const sections: any[] = results.sections;
+// console.log("HeaderNav sections:", sections);
 ---
 
-<!-- Header.Nav -->
 <nav
 	class="sticky inset-0 bottom-auto text-center m-auto py-2 px-4 bg-black/30"
+	data-id="HeaderNav"
 >
 	<ul class="flex justify-center gap-4 m-auto">
 		{
-			items.map((item) => (
-				<HeaderNavItem href={item.href} text={item.text} />
+			sections.map((item, i) => (
+				<li>
+					<HeaderNavItem {...item} />
+				</li>
 			))
 		}
 	</ul>
