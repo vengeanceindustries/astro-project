@@ -1,0 +1,54 @@
+---
+import Layout from "@layouts/Layout.astro";
+
+export interface PageResponse {
+	components: Array<any>;
+	metaDescription: string;
+	navTitle: string;
+	seoCanonicalURL: string;
+	title: string;
+}
+
+let page = Astro.params.page;
+console.log("Catchall page:", { page, api: page?.includes("api/") });
+
+if (!page || page.includes("api/")) {
+	return new Response(null, {
+		status: 404,
+		statusText: "This is not an API page",
+	});
+}
+page = page.split(".")[0];
+const route = `${Astro.url.origin}/api/page.${page}.json`;
+const resp: PageResponse = await fetch(route).then((r) => r.json());
+const {
+	components,
+	metaDescription,
+	navTitle,
+	seoCanonicalURL,
+	title,
+	...data
+} = resp;
+---
+
+<Layout
+	canonical={seoCanonicalURL}
+	description={metaDescription}
+	title={navTitle}
+>
+	<h1 class="text-5xl font-bold text-center my-16">{title}</h1>
+
+	<pre class="text-xs">{JSON.stringify(data, null, '\t')}</pre>
+	{
+		components.map((component, i) => (
+			<details open>
+				<summary>
+					{i}. type: {component.type}
+				</summary>
+				<pre class="text-xs">
+					{JSON.stringify(component, null, "\t")}
+				</pre>
+			</details>
+		))
+	}
+</Layout>

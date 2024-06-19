@@ -3,12 +3,17 @@ import HeaderNav from "./HeaderNav.astro";
 // import { ViewTransitions } from "astro:transitions";
 
 interface Props {
+	canonical?: string;
 	description?: string;
 	title: string;
 }
 
 const bannerName = "Foot Locker";
-const { description = "This is an Astro project", title } = Astro.props;
+const {
+	canonical,
+	description = "This is an Astro project",
+	title,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -18,6 +23,7 @@ const { description = "This is an Astro project", title } = Astro.props;
 		<meta name="description" content={description} />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="canonical" href={canonical} />
 		<!-- <meta name="generator" content={Astro.generator} /> -->
 		<title>{title} | {bannerName}</title>
 		<slot name="head" />
