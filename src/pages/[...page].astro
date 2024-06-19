@@ -10,9 +10,11 @@ export interface PageResponse {
 }
 
 let page = Astro.params.page;
-console.log("Catchall page:", { page, api: page?.includes("api/") });
+const isApi = page?.includes("api/") && page?.endsWith(".json");
+console.log("Catchall page:", { page, isApi });
 
-if (!page || page.includes("api/")) {
+if (!page || isApi) {
+	// return Astro.redirect("/404");
 	return new Response(null, {
 		status: 404,
 		statusText: "This is not an API page",
