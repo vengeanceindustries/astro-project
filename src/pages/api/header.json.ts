@@ -3,7 +3,8 @@ import { getBannerDomain } from "@utils/banner.configs";
 
 export async function GET({ cookies, currentLocale, url }: APIContext) {
 	const bannerDomain = getBannerDomain(cookies); // url.origin || site || bannerDomain;
-	const route = `${bannerDomain}/api/content/en/header.details.json`;
+	const locale = currentLocale || "en";
+	const route = `${bannerDomain}/api/content/${locale}/header.details.json`;
 
 	const headers: HeadersInit = { "x-api-lang": currentLocale || "en-US" };
 
