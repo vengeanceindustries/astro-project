@@ -1,25 +1,12 @@
 ---
-export interface CategoryLink {
-	text: string;
-	url: string;
-	shopAll: boolean;
-}
-export interface SectionCategory {
-	expandByDefault: boolean;
-	hidden: boolean;
-	linkPath?: string;
-	links: Array<CategoryLink>;
-	name: string;
-	style?: "boxes";
-	// 'sub-categories': Array<any>;
-	type: "icons" | "list" | "promoLinks" | string;
-}
-export interface Props {
-	categories?: Array<SectionCategory>;
-	linkPath?: string;
-	name: string;
-}
-const { linkPath, name, categories } = Astro.props;
+import clsx from "clsx";
+import type { HeaderSection } from "@layouts/HeaderNav.astro";
+
+export type Props = HeaderSection & {
+	isSelected: boolean;
+};
+
+const { categories, isSelected, linkPath, name } = Astro.props;
 // if (categories?.length) {
 // 	console.log("categories:", categories);
 // }
@@ -43,8 +30,41 @@ const { linkPath, name, categories } = Astro.props;
 		<button>{name}</button>
 	)
 }
-<!-- {
-	categories?.length && (
-		<pre>{JSON.stringify(categories, null, "\t")}</pre>
+{
+	isSelected && (
+		<div class="absolute left-0 right-0 z-10 p-6 flex max-h-screen overflow-scroll text-left bg-gray-800/90">
+			<div class={clsx("flex gap-8 m-auto ")}>
+				{/* <pre>{JSON.stringify(categories, null, "\t")}</pre> */}
+				{categories?.map(
+					({ links, linkPath, name, style, ...rest }) => (
+						// <pre>{JSON.stringify(rest, null, "\t")}</pre>
+						<section>
+							{name && (
+								<h4>
+									{linkPath ? (
+										<a href={linkPath}>{name}</a>
+									) : (
+										name
+									)}
+								</h4>
+							)}
+							<ul
+								class={
+									style === "boxes"
+										? "flex flex-wrap gap-2 max-w-40"
+										: ""
+								}
+							>
+								{links?.map(({ text, url }) => (
+									<li>
+										<a href={url}>{text}</a>
+									</li>
+								))}
+							</ul>
+						</section>
+					)
+				)}
+			</div>
+		</div>
 	)
-} -->
+}
