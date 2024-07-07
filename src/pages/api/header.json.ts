@@ -1,12 +1,13 @@
 import type { APIContext } from "astro";
 import { getBannerDomain } from "@utils/banner.configs";
 
-export async function GET({ cookies, currentLocale, url }: APIContext) {
-	const bannerDomain = getBannerDomain(cookies); // url.origin || site || bannerDomain;
-	const locale = currentLocale || "en";
-	const route = `${bannerDomain}/api/content/${locale}/header.details.json`;
+export async function GET(ctx: APIContext) {
+	const bannerDomain = getBannerDomain(ctx);
+	const lang = ctx.currentLocale || "en";
+	const locale = ctx.currentLocale || "en-US";
+	const route = `${bannerDomain}/api/content/${lang}/header.details.json`;
 
-	const headers: HeadersInit = { "x-api-lang": currentLocale || "en-US" };
+	const headers: HeadersInit = { "x-api-lang": locale };
 
 	const results = await fetch(route, { headers }).then((r) => r.json());
 	const header = results?.header;
@@ -24,7 +25,6 @@ export async function GET({ cookies, currentLocale, url }: APIContext) {
 		links: [] as any[],
 		sections: [] as any[],
 	};
-	type HeaderReponse = typeof initial;
 
 	const data = header.reduce((all, item, i) => {
 		if (item.zone) {

@@ -2,11 +2,12 @@ import type { APIContext } from "astro";
 import { getBannerDomain } from "@utils/banner.configs";
 import { objectToParams } from "@utils/search";
 
-export async function GET({ currentLocale, url }: APIContext) {
-	const bannerDomain = getBannerDomain();
+export async function GET(ctx: APIContext) {
+	const bannerDomain = getBannerDomain(ctx);
+	const locale = ctx.currentLocale || "en-US";
 	const baseRoute = `${bannerDomain}/zgw/search-core/products/v2/search`;
 
-	// const searchParams = url.searchParams.toString();
+	const { url } = ctx;
 	const searchParams = objectToParams({
 		currentPage: url.searchParams.get("currentPage") || 0,
 		query: url.searchParams.get("query"),
@@ -16,7 +17,7 @@ export async function GET({ currentLocale, url }: APIContext) {
 	});
 	const route = `${baseRoute}?${searchParams}`;
 
-	const headers: HeadersInit = { "x-api-lang": currentLocale || "en-US" };
+	const headers: HeadersInit = { "x-api-lang": locale };
 
 	const results = await fetch(route, { headers }).then((r) => r.json());
 

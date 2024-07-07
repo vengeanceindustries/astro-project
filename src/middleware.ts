@@ -14,7 +14,7 @@ const bannerDetection = defineMiddleware(async (context, next) => {
 	context.cookies.set("FL_BANNER_ID", banner);
 
 	const headers = context.request.headers;
-	const bannerDomain = getBannerDomain(context.cookies);
+	const bannerDomain = getBannerDomain(context);
 	// context.url.host = bannerDomain; // `www.${bannerObj.host}`;
 
 	console.log("middleware", {

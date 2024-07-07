@@ -2,17 +2,17 @@ import type { APIContext } from "astro";
 import { getBannerDomain } from "@utils/banner.configs";
 import { objectToParams } from "@utils/search";
 
-export async function GET({ currentLocale, redirect, url }: APIContext) {
-	const bannerDomain = getBannerDomain();
-	console.log({ bannerDomain });
+export async function GET(ctx: APIContext) {
+	const { redirect, url } = ctx;
+	const bannerDomain = getBannerDomain(ctx);
+	const locale = ctx.currentLocale || "en-US";
 	const baseRoute = `${bannerDomain}/zgw/search-core/redirects/category`;
 
-	const searchParams = objectToParams({
-		q: url.searchParams.get("q") || url.searchParams.get("query"),
-	});
+	const query = url.searchParams.get("q") || url.searchParams.get("query");
+	const searchParams = objectToParams({ q: query });
 	const route = `${baseRoute}?${searchParams}`;
 
-	const headers: HeadersInit = { "x-api-lang": currentLocale || "en-US" };
+	const headers: HeadersInit = { "x-api-lang": locale };
 
 	const results = await fetch(route, { headers }).then((r) => r.json());
 

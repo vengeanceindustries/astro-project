@@ -1,4 +1,12 @@
-import type { APIContext } from "astro";
+import type { APIContext, AstroCookies } from "astro";
+
+/**
+ * Banner Detection Scenarios
+ * ==========================
+ * DATA:
+ * server request => host => domain
+ * window location => host => domain
+ */
 
 export const banners = {
 	CS: {
@@ -33,22 +41,19 @@ export const banners = {
 
 export const BANNER_DEFAULT = "FL";
 
-export function getBanner(
-	id: keyof typeof banners | string
-): typeof banners.FL {
+export function getBannerFromId(id: string): typeof banners.FL {
 	return banners[id as keyof typeof banners] || banners[BANNER_DEFAULT];
 }
 
-export function getBannerDomain(cookies?: APIContext["cookies"]) {
-	// const bannerDomain = "https://www.uat2.origin.footlocker.com";
+export function getBannerDomain({ cookies, site, url }: APIContext) {
 	const remote = import.meta.env.PUBLIC_REMOTE || "uat2";
 	const subdomains = import.meta.env.PROD ? "" : `${remote}.origin.`;
 
 	const cookie = cookies?.get("FL_BANNER_ID")?.value;
 	console.log("getBannerDomain", { cookie });
 
-	const banner = cookie || import.meta.env.PUBLIC_BANNER;
-	const host = getBanner(banner).host; // "footlocker.com"; // based on banner
+	const id = cookie || import.meta.env.PUBLIC_BANNER;
+	const host = url.host || getBannerFromId(id).host;
 
 	return `https://www.${subdomains}${host}`;
 }
