@@ -45,16 +45,25 @@ export function getBannerFromId(id: string): typeof banners.FL {
 	return banners[id as keyof typeof banners] || banners[BANNER_DEFAULT];
 }
 
-export function getBannerDomain({ cookies, site, url }: APIContext) {
+export function getValidHostname(url: URL) {
+	const banner = Object.values(banners).find((b) => b.host === url.hostname);
+	return banner?.host;
+}
+
+export function getBannerHost({ cookies, site, url }: APIContext) {
+	const hostname = getValidHostname(url);
+	if (hostname) return hostname;
+
+	const cookie = cookies?.get("FL_BANNER_ID")?.value;
+	const id = cookie || import.meta.env.PUBLIC_BANNER;
+	return getBannerFromId(id)?.host;
+}
+
+export function getBannerDomain(ctx: APIContext) {
 	const remote = import.meta.env.PUBLIC_REMOTE || "uat2";
 	const subdomains = import.meta.env.PROD ? "" : `${remote}.origin.`;
 
-	const cookie = cookies?.get("FL_BANNER_ID")?.value;
-	console.log("getBannerDomain", { cookie });
-
-	const id = cookie || import.meta.env.PUBLIC_BANNER;
-	const host = url.host || getBannerFromId(id).host;
-
+	const host = getBannerHost(ctx);
 	return `https://www.${subdomains}${host}`;
 }
 
