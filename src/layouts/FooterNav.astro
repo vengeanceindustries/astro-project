@@ -1,0 +1,70 @@
+---
+import type { Footer, FooterResponse } from "src/pages/api/footer.json";
+
+const route = `${Astro.url.origin}/api/footer.json`;
+const results: Footer = await fetch(route).then((r) => r.json());
+const {
+	affiliates,
+	callouts,
+	footerLinks,
+	properties,
+	quickLinks,
+	socialLinks,
+} = results;
+---
+
+<footer class="flex flex-col">
+	<nav class="flex">
+		<ul class="flex gap-4 p-4 m-auto">
+			{
+				quickLinks?.map(({ image, isNewWindow, label, url }) => (
+					<li>
+						<a
+							class="flex flex-col gap-1 p-2"
+							href={url}
+							target={isNewWindow ? "_blank" : "_self"}
+						>
+							<img
+								src={image}
+								alt=""
+								class="m-auto"
+								height={40}
+								width={40}
+							/>{" "}
+							{label}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</nav>
+	<nav class="flex gap-4 p-4 m-auto">
+		{
+			footerLinks?.map((group) => (
+				<div>
+					<h4>{group.heading}</h4>
+					<ul>
+						{group.links.map(({ desc, isNewWindow, url }) => (
+							<li>
+								<a
+									href={url}
+									target={isNewWindow ? "_blank" : "_self"}
+								>
+									{desc}
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
+			))
+		}
+	</nav>
+</footer>
+<pre class="text-xs"
+	>{JSON.stringify({
+	affiliates,
+	callouts,
+	properties,
+	socialLinks,
+}, null, "\t")}</pre
+>

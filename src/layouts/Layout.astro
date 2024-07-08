@@ -1,4 +1,5 @@
 ---
+import FooterNav from "@layouts/FooterNav.astro";
 import HeaderNav from "./HeaderNav.astro";
 // import { ViewTransitions } from "astro:transitions";
 
@@ -33,6 +34,7 @@ const {
 	<body>
 		<HeaderNav />
 		<slot />
+		<FooterNav />
 	</body>
 </html>
 
