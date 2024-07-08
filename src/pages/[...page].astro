@@ -2,9 +2,12 @@
 import Layout from "@layouts/Layout.astro";
 
 export interface PageResponse {
+	// aemPageTitle: string;
 	components: Array<any>;
 	metaDescription: string;
-	navTitle: string;
+	// metaTitle: string;
+	// navTitle: string;
+	persona: string;
 	seoCanonicalURL: string;
 	title: string;
 }
@@ -14,7 +17,6 @@ const isApi = page?.includes("api/") && page?.endsWith(".json");
 console.log("Catchall page:", { page, isApi });
 
 if (!page || isApi) {
-	// return Astro.redirect("/404");
 	return new Response(null, {
 		status: 404,
 		statusText: "This is not an API page",
@@ -22,28 +24,25 @@ if (!page || isApi) {
 }
 page = page.split(".")[0];
 const route = `${Astro.url.origin}/api/page.${page}.json`;
-const resp: PageResponse = await fetch(route).then((r) => r.json());
-const {
-	components,
-	metaDescription,
-	navTitle,
-	seoCanonicalURL,
-	title,
-	...data
-} = resp;
+let resp: PageResponse;
+try {
+	resp = await fetch(route).then((r) => r.json());
+} catch (err) {
+	// return Astro.redirect("/404");
+	return new Response(null, {
+		status: 404,
+		statusText: "Not found",
+	});
+}
+const { components, metaDescription, persona, seoCanonicalURL, title } = resp;
 ---
 
-<Layout
-	canonical={seoCanonicalURL}
-	description={metaDescription}
-	title={navTitle}
->
+<Layout canonical={seoCanonicalURL} description={metaDescription} title={title}>
 	<h1 class="text-5xl font-bold text-center my-16">{title}</h1>
 
-	<pre class="text-xs">{JSON.stringify(data, null, '\t')}</pre>
 	{
 		components.map((component, i) => (
-			<details open>
+			<details open={false}>
 				<summary>
 					{i}. type: {component.type}
 				</summary>
