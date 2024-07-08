@@ -1,31 +1,9 @@
 ---
+import type { HeaderSection } from "src/pages/api/header.json";
 import HeaderNavItem from "./HeaderNavItem.astro";
-
-export interface CategoryLink {
-	text: string;
-	url: string;
-	shopAll: boolean;
-}
-export interface SectionCategory {
-	expandByDefault: boolean;
-	hidden: boolean;
-	linkPath?: string;
-	links: Array<CategoryLink>;
-	name: string;
-	style?: "boxes";
-	// 'sub-categories': Array<any>;
-	type: "icons" | "list" | "promoLinks" | string;
-}
-
-export interface HeaderSection {
-	categories?: Array<SectionCategory>;
-	linkPath?: string;
-	name: string;
-}
 
 const route = `${Astro.url.origin}/api/header.json`;
 const results = await fetch(route).then((r) => r.json());
-// console.log("HeaderNav results:", results);
 const sections: HeaderSection[] = results.sections;
 // console.log("HeaderNav sections:", sections);
 let selectedMenu = 10; // not a real section
