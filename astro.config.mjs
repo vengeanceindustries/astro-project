@@ -8,6 +8,36 @@ import tailwind from "@astrojs/tailwind";
 export default defineConfig({
 	adapter: netlify(),
 	output: "server",
+	i18n: {
+		defaultLocale: "en",
+		// locales: [ "en-US", "en-GB", "en-CA", "fr-CA", "fr-FR", "de-DE", "it-IT", "ko-KR" ],
+		locales: [
+			{
+				path: "en",
+				codes: ["en", "en-US", "en-CA", "en-GB"],
+			},
+			{
+				path: "de",
+				codes: ["de", "de-DE"],
+			},
+			{
+				path: "fr",
+				codes: ["fr", "fr-CA", "fr-FR"],
+			},
+			{
+				path: "it",
+				codes: ["it", "it-IT"],
+			},
+			{
+				path: "ko",
+				codes: ["ko", "ko-KR"],
+			},
+		],
+		routing: "manual",
+		// routing: {
+		// 	prefixDefaultLocale: false,
+		// },
+	},
 	integrations: [
 		partytown(),
 		react(),
@@ -19,4 +49,10 @@ export default defineConfig({
 	],
 	server: { headers: {}, open: "/" },
 	site: "https://www.footlocker.com", // @TODO: an integration that handles this per banner?
+	domains: {
+		"de": "https://www.footlocker.de",
+		"fr": "https://www.footlocker.fr",
+		"fr-CA": "https://www.footlocker.ca/fr/",
+		"fr-FR": "https://www.footlocker.fr",
+	},
 });

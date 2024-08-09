@@ -3,6 +3,7 @@ import {
 	getBannerDomain,
 } from "@utils/banner.configs";
 import { defineMiddleware, sequence } from "astro:middleware";
+import { middleware } from "astro:i18n";
 
 const bannerDetection = defineMiddleware(async (context, next) => {
 	console.group("bannerDetection request");
@@ -66,13 +67,15 @@ const auth = defineMiddleware(async (context, next) => {
 });
 
 const greeting = defineMiddleware(async (context, next) => {
-	console.log("greeting request");
-	console.log("request.url:", context.request.url);
-	// console.log("request:", context.request);
-	// console.log(context);
+	console.log("greeting", {
+		url: context.request.url,
+		params: context.params,
+		preferredLocale: context.preferredLocale,
+		preferredLocaleList: context.preferredLocaleList,
+		props: context.props,
+	});
 	const response = await next();
-	console.log("greeting response");
-	// console.log("greeting response", response);
+	console.log("greeting response.body", response.body);
 	return response;
 });
 
@@ -94,4 +97,10 @@ const sanitize = defineMiddleware(async (_context, next) => {
 
 // export const onRequest = sequence(validation, auth, sanitize);
 // export const onRequest = sequence(bannerDetection);
-export const onRequest = sequence(greeting);
+export const onRequest = sequence(
+	greeting,
+	middleware({
+		redirectToDefaultLocale: false,
+		prefixDefaultLocale: true,
+	})
+);

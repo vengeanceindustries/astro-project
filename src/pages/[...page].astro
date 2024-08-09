@@ -13,8 +13,16 @@ export interface PageResponse {
 }
 
 let page = Astro.params.page;
+// const locale = Astro.currentLocale;
+const { currentLocale, preferredLocale, preferredLocaleList } = Astro;
 const isApi = page?.includes("api/") && page?.endsWith(".json");
-console.log("Catchall page:", { page, isApi });
+console.log("Catchall page:", {
+	page,
+	isApi,
+	currentLocale,
+	preferredLocale,
+	preferredLocaleList,
+});
 
 if (!page || isApi) {
 	return new Response(null, {
@@ -22,22 +30,26 @@ if (!page || isApi) {
 		statusText: "This is not an API page",
 	});
 }
-page = page.split(".")[0];
-const route = `${Astro.url.origin}/api/page.${page}.json`;
-let resp: PageResponse;
-try {
-	resp = await fetch(route).then((r) => r.json());
-} catch (err) {
-	// return Astro.redirect("/404");
-	return new Response(null, {
-		status: 404,
-		statusText: "Not found",
-	});
-}
-const { components, metaDescription, persona, seoCanonicalURL, title } = resp;
+const slug = page.split(".")[0];
+const route = `${Astro.url.origin}/api/page.${slug}.json`;
+// let resp: PageResponse;
+// try {
+// 	resp = await fetch(route).then((r) => r.json());
+// } catch (err) {
+// 	// return Astro.redirect("/404");
+// 	return new Response(null, {
+// 		status: 404,
+// 		statusText: "Not found",
+// 	});
+// }
+// const { components, metaDescription, persona, seoCanonicalURL, title } = resp;
 ---
 
-<Layout canonical={seoCanonicalURL} description={metaDescription} title={title}>
+<pre
+	class="text-xs">
+	{JSON.stringify({page, currentLocale, preferredLocale, preferredLocaleList}, null, "\t")}
+</pre>
+<!-- <Layout canonical={seoCanonicalURL} description={metaDescription} title={title}>
 	<h1 class="text-5xl font-bold text-center my-16">{title}</h1>
 
 	{
@@ -52,4 +64,4 @@ const { components, metaDescription, persona, seoCanonicalURL, title } = resp;
 			</details>
 		))
 	}
-</Layout>
+</Layout> -->
