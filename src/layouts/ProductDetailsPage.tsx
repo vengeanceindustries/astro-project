@@ -112,11 +112,11 @@ export function PdpWithChildren({
 	children,
 	...props
 }: React.PropsWithChildren<ProductDetailsResponse>) {
-	const slots = {
-		aboveAddToCart: [] as React.ReactNode[],
-		belowAddToCart: [] as React.ReactNode[],
-		paymentMethods: [] as React.ReactNode[],
-		content: [] as React.ReactNode[],
+	const slots: PdpSlotList = {
+		aboveAddToCart: [],
+		belowAddToCart: [],
+		paymentMethods: [],
+		content: [],
 	};
 
 	React.Children.forEach(children, (child, i) => {
@@ -160,12 +160,8 @@ export type PdpSlotName =
 	| "aboveAddToCart"
 	| "belowAddToCart"
 	| "paymentMethods";
-interface PdpSlots {
-	aboveAddToCart?: React.ReactNode;
-	belowAddToCart?: React.ReactNode;
-	content?: React.ReactNode;
-	paymentMethods?: React.ReactNode;
-}
+type PdpSlots = Partial<Record<PdpSlotName | "content", React.ReactNode>>;
+type PdpSlotList = Record<PdpSlotName | "content", React.ReactNode[]>;
 
 type Colorways = Record<Color, StyleVariant[]>;
 
