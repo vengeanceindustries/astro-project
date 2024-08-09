@@ -9,6 +9,31 @@ export default function PdpWithSlots(data: ProductDetailsResponse) {
 	return (
 		<>
 			<h1 className="font-mono uppercase text-center p-1">
+				PDP with Slots
+			</h1>
+			<PDP.WithChildren {...data}>
+				<PDP.Slot name="paymentMethods">
+					<PaymentKlarna salePrice={salePrice} />
+				</PDP.Slot>
+
+				<PDP.Slot name="aboveAddToCart">
+					<FlxCashAboveAtcTest
+						salePrice={salePrice}
+						slot="aboveAddToCart"
+					/>
+				</PDP.Slot>
+
+				<PDP.Slot name="belowAddToCart">
+					<FlxCashAboveAtcTest
+						salePrice={salePrice}
+						slot="belowAddToCart"
+					/>
+				</PDP.Slot>
+			</PDP.WithChildren>
+
+			<hr />
+
+			<h1 className="font-mono uppercase text-center p-1">
 				PDP with slot props
 			</h1>
 			<PDP
@@ -61,7 +86,7 @@ export default function PdpWithSlots(data: ProductDetailsResponse) {
 export function PaymentKlarna({ salePrice }: { salePrice: number }) {
 	const installment = (salePrice / 4).toFixed(2);
 	return (
-		<p className="text-xs bg-neutral-50 p-1">
+		<p className="text-xs bg-neutral-100 p-1">
 			4 interest-free payments of ${installment} with{" "}
 			<strong>Klarna</strong>.{" "}
 			<a href="#" className="text-inherit underline">
@@ -83,10 +108,10 @@ export function FlxCashPdpPoints({ salePrice }: { salePrice: number }) {
 	return (
 		<div className="bg-purple-200/50 border-1 border-neutral-400 p-2 my-1">
 			<h5 className="font-bold">
-				This purchase earns you {points} points!
+				This purchase earns you {points.toLocaleString()} points!
 			</h5>
 			<p className="text-sm">Save on future purchase with FLX Cash</p>
-			<p className="text-sm">(15,000 points = $5)</p>
+			<p className="text-xs">(15,000 points = $5)</p>
 		</div>
 	);
 }
@@ -100,9 +125,14 @@ export function FlxCashAboveAtcTest({
 	salePrice: number;
 	slot: PdpSlotName;
 }) {
-	const testFlxCashAboveATC = true; // false; //
+	// fake A/B test flag: //
+	const testFlxCashAboveATC = false; // true; //
 
-	return testFlxCashAboveATC && slot === "aboveAddToCart" ? (
+	const showFlxCash =
+		(testFlxCashAboveATC && slot === "aboveAddToCart") ||
+		(!testFlxCashAboveATC && slot === "belowAddToCart");
+
+	return showFlxCash ? (
 		<FlxCashPdpPoints salePrice={salePrice} />
 	) : (
 		<FlxFreeShippingPromo />

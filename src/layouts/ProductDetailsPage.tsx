@@ -1,5 +1,5 @@
+import React, { type PropsWithChildren } from "react";
 import ProductImage from "@components/ProductImage";
-import React from "react";
 import type {
 	Color,
 	ProductDetailsResponse,
@@ -8,16 +8,20 @@ import type {
 } from "src/pages/[locale]/product/details.json";
 export type { ProductDetailsResponse };
 
-function PdpPaymentMethods({ children }: React.PropsWithChildren) {
+function PdpPaymentMethods({ children }: PropsWithChildren) {
 	return <div data-id="paymentMethods">{children}</div>;
 }
 
-function PdpAboveAddToCard({ children }: React.PropsWithChildren) {
+function PdpAboveAddToCard({ children }: PropsWithChildren) {
 	return <div data-id="aboveAddToCart">{children}</div>;
 }
 
-function PdpBelowAddToCart({ children }: React.PropsWithChildren) {
+function PdpBelowAddToCart({ children }: PropsWithChildren) {
 	return <div data-id="belowAddToCart">{children}</div>;
+}
+
+function Slot({ children, name }: PropsWithChildren<{ name: PdpSlotName }>) {
+	return <div data-id={`pdp-slot-${name}`}>{children}</div>;
 }
 
 const imgWidth = 550;
@@ -111,7 +115,7 @@ export default function PDP({
 export function PdpWithChildren({
 	children,
 	...props
-}: React.PropsWithChildren<ProductDetailsResponse>) {
+}: PropsWithChildren<ProductDetailsResponse>) {
 	const slots: PdpSlotList = {
 		aboveAddToCart: [],
 		belowAddToCart: [],
@@ -122,6 +126,11 @@ export function PdpWithChildren({
 	React.Children.forEach(children, (child, i) => {
 		if (!React.isValidElement(child)) return;
 
+		if (child.type === Slot) {
+			const name = child.props.name as PdpSlotName;
+			if (name in slots) slots[name].push(child);
+			return;
+		}
 		switch (child.type) {
 			case PdpAboveAddToCard:
 				return slots.aboveAddToCart.push(child);
@@ -141,6 +150,7 @@ PDP.WithChildren = PdpWithChildren;
 PDP.PaymentMethods = PdpPaymentMethods;
 PDP.AboveAddToCart = PdpAboveAddToCard;
 PDP.BelowAddToCart = PdpBelowAddToCart;
+PDP.Slot = Slot;
 
 interface PdpProps {
 	brand: string;
