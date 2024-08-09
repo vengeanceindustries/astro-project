@@ -6,23 +6,31 @@ import type {
 	Sku,
 	StyleVariant,
 } from "src/pages/[locale]/product/details.json";
+export type { ProductDetailsResponse };
 
 function PdpPaymentMethods({ children }: React.PropsWithChildren) {
 	return <div data-id="paymentMethods">{children}</div>;
+}
+
+function PdpAboveAddToCard({ children }: React.PropsWithChildren) {
+	return <div data-id="aboveAddToCart">{children}</div>;
 }
 
 function PdpBelowAddToCart({ children }: React.PropsWithChildren) {
 	return <div data-id="belowAddToCart">{children}</div>;
 }
 
-export function PDP({
+const imgWidth = 550;
+
+export default function PDP({
+	aboveAddToCart,
 	belowAddToCart,
 	content,
 	paymentMethods,
 	...props
-}: PdpSlots & PdpProps) {
-	const { brand, color, colorways, gender, name, price, sku } = props;
-	const imgWidth = 539;
+}: PdpSlots & ProductDetailsResponse) {
+	const { brand, color, colorways, gender, name, price, sku } =
+		transformProductDetails(props);
 
 	function PdpHeader({ className }: { className: string }) {
 		return (
@@ -50,7 +58,6 @@ export function PDP({
 					sku={sku}
 					width={imgWidth}
 				/>
-				PdpHeader
 			</div>
 			<div className="flex-1 md:basis-1/3">
 				<PdpHeader className="hidden md:block" />
@@ -61,23 +68,35 @@ export function PDP({
 					</ins>
 				</p>
 
-				<p className="text-sm text-neutral-500">{color}</p>
-
-				{colorways && (
-					<ul className="flex gap-3">
-						{Object.entries(colorways).map(([color, variant]) => (
-							<li key={color}>
-								<ProductImage
-									alt={`${name} - ${gender} - ${color}`}
-									sku={variant[0].sku}
-									width={85}
-								/>
-							</li>
-						))}
-					</ul>
-				)}
-
 				{paymentMethods}
+
+				<div className="my-2">
+					<p className="text-sm text-neutral-500">{color}</p>
+
+					{colorways && (
+						<ul className="flex gap-3">
+							{Object.entries(colorways).map(
+								([color, variant]) => (
+									<li key={color}>
+										<ProductImage
+											alt={`${name} - ${gender} - ${color}`}
+											sku={variant[0].sku}
+											width={85}
+										/>
+									</li>
+								)
+							)}
+						</ul>
+					)}
+				</div>
+
+				<hr className="my-2" />
+				<h2>Sizes</h2>
+				<hr className="my-2" />
+				<h2>Fulfillment method</h2>
+				<hr className="my-2" />
+
+				{aboveAddToCart}
 
 				<button className="px-4 py-2 font-bold bg-black text-white my-2">
 					Add to Cart
@@ -92,18 +111,20 @@ export function PDP({
 export function PdpWithChildren({
 	children,
 	...props
-}: React.PropsWithChildren<PdpProps>) {
-	const slots: PdpSlots = {
-		belowAddToCart: [],
-		paymentMethods: [],
-		content: [],
+}: React.PropsWithChildren<ProductDetailsResponse>) {
+	const slots = {
+		aboveAddToCart: [] as React.ReactNode[],
+		belowAddToCart: [] as React.ReactNode[],
+		paymentMethods: [] as React.ReactNode[],
+		content: [] as React.ReactNode[],
 	};
 
 	React.Children.forEach(children, (child, i) => {
 		if (!React.isValidElement(child)) return;
-		// const kid = { ...child, key: child.type.toString() + i };
 
 		switch (child.type) {
+			case PdpAboveAddToCard:
+				return slots.aboveAddToCart.push(child);
 			case PdpBelowAddToCart:
 				return slots.belowAddToCart.push(child);
 			case PdpPaymentMethods:
@@ -116,7 +137,9 @@ export function PdpWithChildren({
 	return <PDP {...props} {...slots} />;
 }
 
+PDP.WithChildren = PdpWithChildren;
 PDP.PaymentMethods = PdpPaymentMethods;
+PDP.AboveAddToCart = PdpAboveAddToCard;
 PDP.BelowAddToCart = PdpBelowAddToCart;
 
 interface PdpProps {
@@ -133,10 +156,15 @@ interface PdpProps {
 	};
 	sku: string;
 }
+export type PdpSlotName =
+	| "aboveAddToCart"
+	| "belowAddToCart"
+	| "paymentMethods";
 interface PdpSlots {
-	belowAddToCart: React.ReactNode[];
-	content: React.ReactNode[];
-	paymentMethods: React.ReactNode[];
+	aboveAddToCart?: React.ReactNode;
+	belowAddToCart?: React.ReactNode;
+	content?: React.ReactNode;
+	paymentMethods?: React.ReactNode;
 }
 
 type Colorways = Record<Color, StyleVariant[]>;
@@ -166,48 +194,4 @@ export function transformProductDetails(
 		sku: data.style.sku,
 		colorways: colorways,
 	};
-}
-
-export default function PdpWithSlots(data: ProductDetailsResponse) {
-	const salePrice = data.style.price.salePrice;
-
-	return (
-		<PdpWithChildren {...transformProductDetails(data)}>
-			<PDP.PaymentMethods>
-				<PaymentKlarna salePrice={salePrice} />
-			</PDP.PaymentMethods>
-
-			<PDP.BelowAddToCart>
-				<FlxCashPdpPoints salePrice={salePrice} />
-			</PDP.BelowAddToCart>
-		</PdpWithChildren>
-	);
-}
-
-// ADDED COMPONENTS VIA SLOTS //
-
-export function PaymentKlarna({ salePrice }: { salePrice: number }) {
-	const installment = (salePrice / 4).toFixed(2);
-	return (
-		<p className="text-xs bg-neutral-50 p-1">
-			4 interest-free payments of ${installment} with{" "}
-			<strong>Klarna</strong>.{" "}
-			<a href="#" className="text-inherit underline">
-				Learn more
-			</a>
-		</p>
-	);
-}
-
-export function FlxCashPdpPoints({ salePrice }: { salePrice: number }) {
-	const points = Math.round(salePrice * 100);
-	return (
-		<div className="bg-purple-200/50 border-1 border-neutral-400 p-2">
-			<h5 className="font-bold">
-				This purchase earns you {points} points!
-			</h5>
-			<p className="text-sm">Save on future purchase with FLX Cash</p>
-			<p className="text-sm">(15,000 points = $5)</p>
-		</div>
-	);
 }
