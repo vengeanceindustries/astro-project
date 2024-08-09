@@ -31,30 +31,6 @@ export default function PdpWithSlots(data: ProductDetailsResponse) {
 				</PDP.Slot>
 			</PDP.WithChildren>
 
-			<hr />
-
-			<h1 className="font-mono uppercase text-center p-1">
-				PDP with slot props
-			</h1>
-			<PDP
-				{...data}
-				aboveAddToCart={
-					<FlxCashAboveAtcTest
-						salePrice={salePrice}
-						slot="aboveAddToCart"
-					/>
-				}
-				belowAddToCart={
-					<FlxCashAboveAtcTest
-						salePrice={salePrice}
-						slot="belowAddToCart"
-					/>
-				}
-				paymentMethods={<PaymentKlarna salePrice={salePrice} />}
-			/>
-
-			<hr />
-
 			<h1 className="font-mono uppercase text-center p-1">
 				PDP with children slots
 			</h1>
@@ -77,6 +53,26 @@ export default function PdpWithSlots(data: ProductDetailsResponse) {
 					/>
 				</PDP.BelowAddToCart>
 			</PDP.WithChildren>
+
+			<h1 className="font-mono uppercase text-center p-1">
+				PDP with slot props
+			</h1>
+			<PDP
+				{...data}
+				aboveAddToCart={
+					<FlxCashAboveAtcTest
+						salePrice={salePrice}
+						slot="aboveAddToCart"
+					/>
+				}
+				belowAddToCart={
+					<FlxCashAboveAtcTest
+						salePrice={salePrice}
+						slot="belowAddToCart"
+					/>
+				}
+				paymentMethods={<PaymentKlarna salePrice={salePrice} />}
+			/>
 		</>
 	);
 }
