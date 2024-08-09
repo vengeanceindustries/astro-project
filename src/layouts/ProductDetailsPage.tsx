@@ -11,7 +11,7 @@ function PdpPaymentMethods({ children }: React.PropsWithChildren) {
 	return <div data-id="paymentMethods">{children}</div>;
 }
 
-function BelowAddToCart({ children }: React.PropsWithChildren) {
+function PdpBelowAddToCart({ children }: React.PropsWithChildren) {
 	return <div data-id="belowAddToCart">{children}</div>;
 }
 
@@ -20,7 +20,7 @@ export function PDP({
 	content,
 	paymentMethods,
 	...props
-}: ChildrenToSlots & PdpProps) {
+}: PdpSlots & PdpProps) {
 	const { brand, color, colorways, gender, name, price, sku } = props;
 	const imgWidth = 539;
 
@@ -93,36 +93,31 @@ export function PdpWithChildren({
 	children,
 	...props
 }: React.PropsWithChildren<PdpProps>) {
-	let belowAddToCart = [] as React.ReactNode[];
-	let paymentMethods = [] as React.ReactNode[];
-	let content = [] as React.ReactNode[];
+	const slots: PdpSlots = {
+		belowAddToCart: [],
+		paymentMethods: [],
+		content: [],
+	};
 
 	React.Children.forEach(children, (child, i) => {
 		if (!React.isValidElement(child)) return;
 		// const kid = { ...child, key: child.type.toString() + i };
 
 		switch (child.type) {
-			case BelowAddToCart:
-				return belowAddToCart.push(child);
+			case PdpBelowAddToCart:
+				return slots.belowAddToCart.push(child);
 			case PdpPaymentMethods:
-				return paymentMethods.push(child);
+				return slots.paymentMethods.push(child);
 			default:
-				return content.push(child);
+				return slots.content.push(child);
 		}
 	});
 
-	return (
-		<PDP
-			{...props}
-			belowAddToCart={belowAddToCart}
-			content={content}
-			paymentMethods={paymentMethods}
-		/>
-	);
+	return <PDP {...props} {...slots} />;
 }
 
 PDP.PaymentMethods = PdpPaymentMethods;
-PDP.BelowAddToCart = BelowAddToCart;
+PDP.BelowAddToCart = PdpBelowAddToCart;
 
 interface PdpProps {
 	brand: string;
@@ -138,11 +133,12 @@ interface PdpProps {
 	};
 	sku: string;
 }
-interface ChildrenToSlots {
+interface PdpSlots {
 	belowAddToCart: React.ReactNode[];
 	content: React.ReactNode[];
 	paymentMethods: React.ReactNode[];
 }
+
 type Colorways = Record<Color, StyleVariant[]>;
 
 export function transformProductDetails(
