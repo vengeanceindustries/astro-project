@@ -5,6 +5,7 @@ import type {
 	ProductDetailsResponse,
 	StyleVariant,
 } from "src/pages/[locale]/product/details.json";
+import clsx from "clsx";
 import { createSlot } from "@components/Slot";
 export type { ProductDetailsResponse };
 
@@ -19,7 +20,7 @@ export default function PDP({
 	paymentMethods,
 	...props
 }: PdpSlots & ProductDetailsResponse) {
-	const { brand, color, colorways, gender, name, price, sku } =
+	const { brand, color, colorways, gender, name, price, sizes, sku } =
 		transformProductDetails(props);
 
 	function PdpHeader({ className }: { className: string }) {
@@ -80,8 +81,35 @@ export default function PDP({
 					)}
 				</div>
 
-				<hr className="my-2" />
-				<h2>Sizes</h2>
+				{sizes && (
+					<fieldset>
+						<legend className="font-bold mb-1">
+							Select a size
+						</legend>
+						<ul className="flex flex-wrap gap-2">
+							{sizes.map((size) => (
+								<li key={size.size}>
+									<label className="block">
+										<input
+											className="peer sr-only"
+											name="size"
+											type="radio"
+											value={size.size}
+										/>
+										<span
+											className={clsx(
+												"block bg-neutral-100 py-1 px-2",
+												"peer-checked:bg-black peer-checked:text-white"
+											)}
+										>
+											{Number(size.size).toFixed(1)}
+										</span>
+									</label>
+								</li>
+							))}
+						</ul>
+					</fieldset>
+				)}
 				<hr className="my-2" />
 				<h2>Fulfillment method</h2>
 				<hr className="my-2" />
@@ -137,8 +165,10 @@ interface PdpProps {
 		formattedListPrice: string;
 		formattedSalePrice: string;
 	};
+	sizes: ReturnType<typeof transformSizes>;
 	sku: string;
 }
+
 export type PdpSlotName =
 	| "aboveAddToCart"
 	| "belowAddToCart"
@@ -148,13 +178,8 @@ type PdpSlotList = Record<PdpSlotName | "content", React.ReactNode[]>;
 
 type Colorways = Record<Color, StyleVariant[]>;
 
-export function transformProductDetails(
-	data: ProductDetailsResponse
-): PdpProps {
-	const [name, genderFromName] = data.model.name.split(" - ");
-	const gender = data.model.genders[0] || genderFromName;
-
-	const colorways = data.styleVariants.reduce((all, variant) => {
+export function transformColorways(data: ProductDetailsResponse) {
+	return data.styleVariants.reduce((all, variant) => {
 		if (all[variant.color]) {
 			all[variant.color].push(variant);
 		} else {
@@ -162,6 +187,31 @@ export function transformProductDetails(
 		}
 		return all;
 	}, {} as Colorways);
+}
+
+export function transformSizes(data: ProductDetailsResponse) {
+	return data.sizes.map((size) => ({
+		size: size.size,
+		strippedSize: size.strippedSize,
+		productNumber: size.productNumber,
+		productWebKey: size.productWebKey,
+		active: size.active,
+		inventory: {
+			dropshipInventoryAvailable:
+				size.inventory.dropshipInventoryAvailable,
+			inventoryAvailable: size.inventory.inventoryAvailable,
+			storeInventoryAvailable: size.inventory.storeInventoryAvailable,
+			warehouseInventoryAvailable:
+				size.inventory.warehouseInventoryAvailable,
+		},
+	}));
+}
+
+export function transformProductDetails(
+	data: ProductDetailsResponse
+): PdpProps {
+	const [name, genderFromName] = data.model.name.split(" - ");
+	const gender = data.model.genders[0] || genderFromName;
 
 	return {
 		brand: data.model.brand,
@@ -169,7 +219,8 @@ export function transformProductDetails(
 		gender: gender,
 		name: name,
 		price: data.style.price,
+		sizes: transformSizes(data),
 		sku: data.style.sku,
-		colorways: colorways,
+		colorways: transformColorways(data),
 	};
 }
