@@ -10,18 +10,6 @@ export type { ProductDetailsResponse };
 
 export const { Slot, useSlot } = createSlot<PdpSlotName>();
 
-function PdpPaymentMethods({ children }: PropsWithChildren) {
-	return <div data-id="paymentMethods">{children}</div>;
-}
-
-function PdpAboveAddToCard({ children }: PropsWithChildren) {
-	return <div data-id="aboveAddToCart">{children}</div>;
-}
-
-function PdpBelowAddToCart({ children }: PropsWithChildren) {
-	return <div data-id="belowAddToCart">{children}</div>;
-}
-
 const imgWidth = 550;
 
 export default function PDP({
@@ -129,25 +117,12 @@ export function PdpWithChildren({
 			if (name in slots) slots[name].push(child);
 			return;
 		}
-		switch (child.type) {
-			case PdpAboveAddToCard:
-				return slots.aboveAddToCart.push(child);
-			case PdpBelowAddToCart:
-				return slots.belowAddToCart.push(child);
-			case PdpPaymentMethods:
-				return slots.paymentMethods.push(child);
-			default:
-				return slots.content.push(child);
-		}
 	});
 
 	return <PDP {...props} {...slots} />;
 }
 
 PDP.WithChildren = PdpWithChildren;
-PDP.PaymentMethods = PdpPaymentMethods;
-PDP.AboveAddToCart = PdpAboveAddToCard;
-PDP.BelowAddToCart = PdpBelowAddToCart;
 PDP.Slot = Slot;
 
 interface PdpProps {
@@ -176,9 +151,8 @@ type Colorways = Record<Color, StyleVariant[]>;
 export function transformProductDetails(
 	data: ProductDetailsResponse
 ): PdpProps {
-	let [name, gender] = data.model.name.split(" - ");
-	gender = gender || data.model.genders[0];
-	const salePrice = data.style.price.salePrice;
+	const [name, genderFromName] = data.model.name.split(" - ");
+	const gender = data.model.genders[0] || genderFromName;
 
 	const colorways = data.styleVariants.reduce((all, variant) => {
 		if (all[variant.color]) {

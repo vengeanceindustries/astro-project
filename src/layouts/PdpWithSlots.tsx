@@ -27,29 +27,6 @@ export default function PdpWithSlots(data: ProductDetailsResponse) {
 			</PDP.WithChildren>
 
 			<h1 className="font-mono uppercase text-center p-1">
-				PDP with children slots
-			</h1>
-			<PDP.WithChildren {...data}>
-				<PDP.PaymentMethods>
-					<PaymentKlarna salePrice={salePrice} />
-				</PDP.PaymentMethods>
-
-				<PDP.AboveAddToCart>
-					<FlxCashAboveAtcTest
-						salePrice={salePrice}
-						slot="aboveAddToCart"
-					/>
-				</PDP.AboveAddToCart>
-
-				<PDP.BelowAddToCart>
-					<FlxCashAboveAtcTest
-						salePrice={salePrice}
-						slot="belowAddToCart"
-					/>
-				</PDP.BelowAddToCart>
-			</PDP.WithChildren>
-
-			<h1 className="font-mono uppercase text-center p-1">
 				PDP with slot props
 			</h1>
 			<PDP
