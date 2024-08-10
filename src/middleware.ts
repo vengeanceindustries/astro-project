@@ -98,7 +98,7 @@ const sanitize = defineMiddleware(async (_context, next) => {
 // export const onRequest = sequence(validation, auth, sanitize);
 // export const onRequest = sequence(bannerDetection);
 export const onRequest = sequence(
-	greeting,
+	// greeting,
 	middleware({
 		redirectToDefaultLocale: false,
 		prefixDefaultLocale: true,
