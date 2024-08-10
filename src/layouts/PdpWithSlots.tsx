@@ -1,4 +1,5 @@
 import PDP, {
+	useSlot,
 	type PdpSlotName,
 	type ProductDetailsResponse,
 } from "@layouts/ProductDetailsPage";
@@ -17,17 +18,11 @@ export default function PdpWithSlots(data: ProductDetailsResponse) {
 				</PDP.Slot>
 
 				<PDP.Slot name="aboveAddToCart">
-					<FlxCashAboveAtcTest
-						salePrice={salePrice}
-						slot="aboveAddToCart"
-					/>
+					<FlxCashAboveAtcTest salePrice={salePrice} />
 				</PDP.Slot>
 
 				<PDP.Slot name="belowAddToCart">
-					<FlxCashAboveAtcTest
-						salePrice={salePrice}
-						slot="belowAddToCart"
-					/>
+					<FlxCashAboveAtcTest salePrice={salePrice} />
 				</PDP.Slot>
 			</PDP.WithChildren>
 
@@ -119,10 +114,12 @@ export function FlxCashAboveAtcTest({
 	slot,
 }: {
 	salePrice: number;
-	slot: PdpSlotName;
+	slot?: PdpSlotName;
 }) {
 	// fake A/B test flag: //
 	const testFlxCashAboveATC = false; // true; //
+
+	slot = useSlot() || slot;
 
 	const showFlxCash =
 		(testFlxCashAboveATC && slot === "aboveAddToCart") ||

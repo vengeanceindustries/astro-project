@@ -3,10 +3,12 @@ import ProductImage from "@components/ProductImage";
 import type {
 	Color,
 	ProductDetailsResponse,
-	Sku,
 	StyleVariant,
 } from "src/pages/[locale]/product/details.json";
+import { createSlot } from "@components/Slot";
 export type { ProductDetailsResponse };
+
+export const { Slot, useSlot } = createSlot<PdpSlotName>();
 
 function PdpPaymentMethods({ children }: PropsWithChildren) {
 	return <div data-id="paymentMethods">{children}</div>;
@@ -18,10 +20,6 @@ function PdpAboveAddToCard({ children }: PropsWithChildren) {
 
 function PdpBelowAddToCart({ children }: PropsWithChildren) {
 	return <div data-id="belowAddToCart">{children}</div>;
-}
-
-function Slot({ children, name }: PropsWithChildren<{ name: PdpSlotName }>) {
-	return <div data-id={`pdp-slot-${name}`}>{children}</div>;
 }
 
 const imgWidth = 550;
