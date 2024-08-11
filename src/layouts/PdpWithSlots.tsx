@@ -8,7 +8,7 @@ export default function PdpWithSlots(data: ProductDetailsResponse) {
 	const salePrice = data.style.price.salePrice;
 
 	return (
-		<>
+		<div className="bg-white text-black">
 			<h1 className="font-mono uppercase text-center p-1">
 				PDP with Slots
 			</h1>
@@ -26,7 +26,7 @@ export default function PdpWithSlots(data: ProductDetailsResponse) {
 				</PDP.Slot>
 			</PDP.WithChildren>
 
-			<h1 className="font-mono uppercase text-center p-1">
+			{/* <h1 className="font-mono uppercase text-center p-1">
 				PDP with slot props
 			</h1>
 			<PDP
@@ -44,8 +44,8 @@ export default function PdpWithSlots(data: ProductDetailsResponse) {
 					/>
 				}
 				paymentMethods={<PaymentKlarna salePrice={salePrice} />}
-			/>
-		</>
+			/> */}
+		</div>
 	);
 }
 

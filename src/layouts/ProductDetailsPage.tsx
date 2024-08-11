@@ -3,6 +3,7 @@ import ProductImage from "@components/ProductImage";
 import type {
 	Color,
 	ProductDetailsResponse,
+	SizeChart,
 	StyleVariant,
 } from "src/pages/[locale]/product/details.json";
 import clsx from "clsx";
@@ -20,8 +21,9 @@ export default function PDP({
 	paymentMethods,
 	...props
 }: PdpSlots & ProductDetailsResponse) {
-	const { brand, color, colorways, gender, name, price, sizes, sku } =
-		transformProductDetails(props);
+	const { colorways, model, sizes, style } = formatProductDetails(props);
+	const { brand, gender, name } = model;
+	const { color, price, sku } = style;
 
 	function PdpHeader({ className }: { className: string }) {
 		return (
@@ -41,7 +43,7 @@ export default function PDP({
 	}
 
 	return (
-		<div className="flex flex-col md:flex-row gap-4 bg-white text-black">
+		<div className="flex flex-col md:flex-row gap-4">
 			<PdpHeader className="md:hidden" />
 			<div className="flex-1 basis-auto" data-id="gallery">
 				<ProductImage
@@ -153,22 +155,6 @@ export function PdpWithChildren({
 PDP.WithChildren = PdpWithChildren;
 PDP.Slot = Slot;
 
-interface PdpProps {
-	brand: string;
-	color: string;
-	colorways?: Colorways;
-	gender: string;
-	name: string;
-	price: {
-		listPrice: number;
-		salePrice: number;
-		formattedListPrice: string;
-		formattedSalePrice: string;
-	};
-	sizes: ReturnType<typeof transformSizes>;
-	sku: string;
-}
-
 export type PdpSlotName =
 	| "aboveAddToCart"
 	| "belowAddToCart"
@@ -178,7 +164,7 @@ type PdpSlotList = Record<PdpSlotName | "content", React.ReactNode[]>;
 
 type Colorways = Record<Color, StyleVariant[]>;
 
-export function transformColorways(data: ProductDetailsResponse) {
+export function formatColorways(data: ProductDetailsResponse) {
 	return data.styleVariants.reduce((all, variant) => {
 		if (all[variant.color]) {
 			all[variant.color].push(variant);
@@ -189,7 +175,7 @@ export function transformColorways(data: ProductDetailsResponse) {
 	}, {} as Colorways);
 }
 
-export function transformSizes(data: ProductDetailsResponse) {
+export function formatSizes(data: ProductDetailsResponse) {
 	return data.sizes.map((size) => ({
 		size: size.size,
 		strippedSize: size.strippedSize,
@@ -207,20 +193,36 @@ export function transformSizes(data: ProductDetailsResponse) {
 	}));
 }
 
-export function transformProductDetails(
-	data: ProductDetailsResponse
-): PdpProps {
+export function formatModel(data: ProductDetailsResponse) {
 	const [name, genderFromName] = data.model.name.split(" - ");
 	const gender = data.model.genders[0] || genderFromName;
 
 	return {
 		brand: data.model.brand,
-		color: data.style.color,
 		gender: gender,
 		name: name,
-		price: data.style.price,
-		sizes: transformSizes(data),
+	};
+}
+
+export function formatStyle(data: ProductDetailsResponse) {
+	return {
+		color: data.style.color,
+		price: {
+			listPrice: data.style.price.listPrice,
+			salePrice: data.style.price.salePrice,
+			formattedListPrice: data.style.price.formattedListPrice,
+			formattedSalePrice: data.style.price.formattedSalePrice,
+		},
 		sku: data.style.sku,
-		colorways: transformColorways(data),
+	};
+}
+
+export function formatProductDetails(data: ProductDetailsResponse) {
+	return {
+		colorways: formatColorways(data),
+		model: formatModel(data),
+		sizes: formatSizes(data),
+		sizeChart: data.sizeChart,
+		style: formatStyle(data),
 	};
 }

@@ -140,21 +140,19 @@ export interface Size {
 }
 
 export interface Price {
-	currencyIso: null;
 	listPrice: number;
 	salePrice: number;
-	vendorShippingPrice: number | null;
 	formattedListPrice: FormattedPrice;
 	formattedSalePrice: FormattedPrice;
-	formattedVendorShippingPrice: FormattedVendorShippingPrice;
+	currencyIso: null;
+	vendorShippingPrice: number | null;
+	formattedVendorShippingPrice: FormattedPrice;
 	priceRange: PriceRange;
-	topSalesAmount: number | null;
 	taxClassificationCode: null | string;
+	topSalesAmount: number | null;
 }
 
 export type FormattedPrice = string;
-
-export type FormattedVendorShippingPrice = string;
 
 export type PriceRange = string;
 
