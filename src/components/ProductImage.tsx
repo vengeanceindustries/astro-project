@@ -1,4 +1,4 @@
-import type { Sku } from "src/pages/[locale]/product/details.json";
+import type { Sku } from "@layouts/ProductDetails";
 
 export default function ProductImage({
 	sku,

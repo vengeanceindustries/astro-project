@@ -5,7 +5,7 @@ import type {
 	ProductDetailsResponse,
 	Sku,
 	StyleVariant,
-} from "src/pages/[locale]/product/details.json";
+} from "@layouts/ProductDetails";
 import clsx from "clsx";
 import { createSlot } from "@components/Slot";
 export type { ProductDetailsResponse };
