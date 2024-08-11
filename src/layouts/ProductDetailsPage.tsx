@@ -25,7 +25,6 @@ export default function PDP({
 	const { colorways, model, sizes, style } = formatProductDetails(props);
 	const { brand, gender, name } = model;
 	const { color, price, sku } = style;
-	const selectedSku = sku;
 
 	function PdpHeader({ className }: { className: string }) {
 		return (
@@ -58,6 +57,7 @@ export default function PDP({
 				</div>
 				<div className="flex-1 md:basis-1/3">
 					<PdpHeader className="hidden md:block" />
+
 					<p className="my-2">
 						<del className="">{price.formattedListPrice}</del>{" "}
 						<ins className="no-underline text-red-500">
@@ -67,12 +67,12 @@ export default function PDP({
 
 					{paymentMethods}
 
-					<ProductColorways
+					<PdpColorways
 						colorways={colorways}
 						model={model}
 						style={style}
 					/>
-					<ProductSizes sizes={sizes} />
+					<PdpSizes sizes={sizes} />
 
 					<hr className="my-2" />
 					<h2>Fulfillment method</h2>
@@ -94,7 +94,7 @@ export default function PDP({
 	);
 }
 
-export function ColorwayLink({
+export function PdpColorwayLink({
 	model,
 	selectedSku,
 	variant,
@@ -121,7 +121,7 @@ export function ColorwayLink({
 		</a>
 	);
 }
-export function ProductColorways({
+export function PdpColorways({
 	colorways,
 	model,
 	style,
@@ -134,7 +134,7 @@ export function ProductColorways({
 				<ul className="grid grid-cols-5 gap-3">
 					{Object.entries(colorways).map(([color, variants]) => (
 						<li key={color}>
-							<ColorwayLink
+							<PdpColorwayLink
 								model={model}
 								selectedSku={style.sku}
 								variant={variants[0]}
@@ -147,11 +147,7 @@ export function ProductColorways({
 	);
 }
 
-export function ProductSizes({
-	sizes,
-}: {
-	sizes: ReturnType<typeof formatSizes>;
-}) {
+export function PdpSizes({ sizes }: { sizes: ReturnType<typeof formatSizes> }) {
 	if (!sizes?.length) {
 		return null;
 	}
