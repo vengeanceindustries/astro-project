@@ -3,6 +3,7 @@ import ProductImage from "@components/ProductImage";
 import type {
 	Color,
 	ProductDetailsResponse,
+	Size,
 	Sku,
 	StyleVariant,
 } from "@layouts/ProductDetails";
@@ -34,17 +35,13 @@ export default function PDP({
 
 	return (
 		<>
-			<div className="flex flex-col md:flex-row gap-4">
+			<div className="flex flex-col md:flex-row gap-4 p-4 bg-neutral-100">
 				<PdpHeader className="md:hidden" model={model} />
 
-				<div className="flex-1 md:basis-2/3" data-id="gallery">
-					<ProductImage
-						alt={`${name} - ${gender} - ${color}`}
-						sku={sku}
-						width={imgWidth}
-					/>
+				<div className="flex-1 lg:basis-2/3" data-id="gallery">
+					<PdpGallery {...{ model, style }} />
 				</div>
-				<div className="flex-1 md:basis-1/3">
+				<div className="flex-1 lg:basis-1/3 p-4 bg-white">
 					<PdpHeader className="hidden md:block" model={model} />
 
 					<p className="my-2">
@@ -102,6 +99,52 @@ export function PdpHeader({
 				</a>
 			</p>
 		</header>
+	);
+}
+
+export function PdpGallery({
+	model,
+	style,
+}: Pick<FormattedPdpProps, "model" | "style">) {
+	const alt = `${model.name} - ${model.gender} - ${style.color}`;
+	const variants = style.imageUrl?.variants;
+
+	const masonry = variants && (
+		<ul
+			className={clsx(
+				"hidden md:grid",
+				"auto-rows-fr gap-4",
+				"grid-cols-2 lg:grid-cols-3 xl:grid-rows-[masonry]"
+			)}
+		>
+			{variants.map((variant, i) => (
+				<li
+					key={variant}
+					className={clsx(
+						{ "col-span-2 row-span-2": i === 0 },
+						"bg-white"
+					)}
+				>
+					<ProductImage
+						alt={`${alt} - ${i + 1}`}
+						src={variant}
+						width={imgWidth}
+					/>
+				</li>
+			))}
+		</ul>
+	);
+	return (
+		<div data-id="gallery">
+			{masonry}
+			<ProductImage
+				alt={alt}
+				className="md:hidden"
+				sku={style.sku}
+				src={style.imageUrl?.base}
+				width={imgWidth}
+			/>
+		</div>
 	);
 }
 
