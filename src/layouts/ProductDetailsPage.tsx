@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren } from "react";
+import React, { useState, type PropsWithChildren } from "react";
 import ProductImage from "@components/ProductImage";
 import type {
 	Color,
@@ -32,6 +32,7 @@ export default function PDP({
 	const { colorways, model, sizes, style } = formatProductDetails(props);
 	const { gender, name } = model;
 	const { color, price, sku } = style;
+	const [selectedSize, setSize] = useState("");
 
 	return (
 		<>
@@ -54,9 +55,17 @@ export default function PDP({
 					<PdpColorways
 						colorways={colorways}
 						model={model}
+						selectedSize={selectedSize}
 						style={style}
 					/>
-					<PdpSizes sizes={sizes} style={style} />
+					{/* <p>
+						<strong>{selectedSize}</strong>
+					</p> */}
+					<PdpSizes
+						onChange={(e) => setSize(e.currentTarget.value)}
+						sizes={sizes}
+						style={style}
+					/>
 
 					{shippingMessage}
 
@@ -167,19 +176,33 @@ export function PdpColorwayLink({
 	model,
 	selectedSku,
 	variant,
-}: { selectedSku: Sku; variant: StyleVariant } & Pick<
-	FormattedPdpProps,
-	"model"
->) {
+	variants,
+}: {
+	selectedSku: Sku;
+	variant: StyleVariant;
+	variants: StyleVariant[];
+} & Pick<FormattedPdpProps, "model">) {
 	const { color, sku } = variant;
 	const isSelected = selectedSku === sku;
+	const isActive =
+		!variants?.length ||
+		variants.some((v) => v.inventory.inventoryAvailable && v.active);
+
 	return (
 		<a
+			aria-selected={isSelected}
 			href={`/en/product/~/${sku}`}
 			className={clsx(
+				"text-black hover:text-black hover:no-underline",
 				"block outline-1 hover:outline hover:outline-black",
-				"relative after:content-[''] after:absolute after:bottom-0 after:w-full after:h-[3px]",
-				{ "after:bg-black": isSelected }
+				"relative after:absolute after:bottom-0 after:w-full after:h-[3px]",
+				"aria-selected:after:bg-black",
+				{
+					"before:bg-white before:border before:border-neutral-600 before:absolute before:top-1/2 before:left-0 before:right-[10%]":
+						!isActive,
+					"before:shadow-[0_0_0_2px_white] before:-rotate-[35deg]":
+						!isActive,
+				}
 			)}
 		>
 			<ProductImage
@@ -193,8 +216,11 @@ export function PdpColorwayLink({
 export function PdpColorways({
 	colorways,
 	model,
+	selectedSize,
 	style,
-}: Pick<FormattedPdpProps, "colorways" | "model" | "style">) {
+}: Pick<FormattedPdpProps, "colorways" | "model" | "style"> & {
+	selectedSize?: string;
+}) {
 	return (
 		<div className="my-2">
 			<p className="text-sm text-neutral-500">{style.color}</p>
@@ -207,6 +233,9 @@ export function PdpColorways({
 								model={model}
 								selectedSku={style.sku}
 								variant={variants[0]}
+								variants={variants.filter(
+									(v) => v.size === selectedSize
+								)}
 							/>
 						</li>
 					))}
@@ -216,7 +245,12 @@ export function PdpColorways({
 	);
 }
 
-export function PdpSizeField(size: FormattedPdpSize) {
+export function PdpSizeField({
+	onChange,
+	...size
+}: FormattedPdpSize & {
+	onChange: React.ChangeEventHandler<HTMLInputElement>;
+}) {
 	const disabled = !size.active || !size.inventory.inventoryAvailable;
 	return (
 		<label className="block w-20 text-center text-sm font-semibold cursor-pointer">
@@ -225,6 +259,7 @@ export function PdpSizeField(size: FormattedPdpSize) {
 				className="peer sr-only"
 				disabled={disabled}
 				name="size"
+				onChange={onChange}
 				type="radio"
 				value={size.size}
 			/>
@@ -247,9 +282,12 @@ export function PdpSizeField(size: FormattedPdpSize) {
 }
 
 export function PdpSizes({
+	onChange,
 	sizes,
 	style,
-}: Pick<FormattedPdpProps, "sizes" | "style">) {
+}: Pick<FormattedPdpProps, "sizes" | "style"> & {
+	onChange: React.ChangeEventHandler<HTMLInputElement>;
+}) {
 	if (!sizes?.length) {
 		return null;
 	}
@@ -264,7 +302,7 @@ export function PdpSizes({
 			<ul className="flex flex-wrap gap-2">
 				{sizes.map((size) => (
 					<li key={size.size} className="block">
-						<PdpSizeField {...size} />
+						<PdpSizeField {...size} onChange={onChange} />
 					</li>
 				))}
 			</ul>

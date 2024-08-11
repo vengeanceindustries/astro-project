@@ -22,7 +22,7 @@ const selectedSize = searchParams.get("size");
 	<h1 class="text-2xl">Name: {data.model.name}</h1>
 	<h2 class="text-xl">sku: {data.style.sku}</h2>
 
-	<PdpWithSlots {...data} />
+	<PdpWithSlots client:visible={!!data} {...data} />
 
 	<h3 class="text-xl bg-green-500/30 mb-2">selectedSize? {selectedSize}</h3>
 	{
