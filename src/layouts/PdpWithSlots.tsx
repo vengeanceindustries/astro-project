@@ -8,7 +8,7 @@ export default function PdpWithSlots(data: ProductDetailsResponse) {
 	const salePrice = data.style.price.salePrice;
 
 	return (
-		<div className="bg-white text-black">
+		<div className="bg-white text-black px-4">
 			<h1 className="font-mono uppercase text-center p-1">
 				PDP with Slots
 			</h1>

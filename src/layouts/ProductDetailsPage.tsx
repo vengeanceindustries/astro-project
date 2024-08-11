@@ -43,88 +43,93 @@ export default function PDP({
 	}
 
 	return (
-		<div className="flex flex-col md:flex-row gap-4">
-			<PdpHeader className="md:hidden" />
-			<div className="flex-1 basis-auto" data-id="gallery">
-				<ProductImage
-					alt={`${name} - ${gender} - ${color}`}
-					sku={sku}
-					width={imgWidth}
-				/>
-			</div>
-			<div className="flex-1 md:basis-1/3">
-				<PdpHeader className="hidden md:block" />
-				<p className="my-2">
-					<del className="">{price.formattedListPrice}</del>{" "}
-					<ins className="no-underline text-red-500">
-						{price.formattedSalePrice}
-					</ins>
-				</p>
-
-				{paymentMethods}
-
-				<div className="my-2">
-					<p className="text-sm text-neutral-500">{color}</p>
-
-					{colorways && (
-						<ul className="flex gap-3">
-							{Object.entries(colorways).map(
-								([color, variant]) => (
-									<li key={color}>
-										<ProductImage
-											alt={`${name} - ${gender} - ${color}`}
-											sku={variant[0].sku}
-											width={85}
-										/>
-									</li>
-								)
-							)}
-						</ul>
-					)}
+		<>
+			<div className="flex flex-col md:flex-row gap-4">
+				<PdpHeader className="md:hidden" />
+				<div className="flex-1 basis-auto" data-id="gallery">
+					<ProductImage
+						alt={`${name} - ${gender} - ${color}`}
+						sku={sku}
+						width={imgWidth}
+					/>
 				</div>
+				<div className="flex-1 md:basis-1/3">
+					<PdpHeader className="hidden md:block" />
+					<p className="my-2">
+						<del className="">{price.formattedListPrice}</del>{" "}
+						<ins className="no-underline text-red-500">
+							{price.formattedSalePrice}
+						</ins>
+					</p>
 
-				{sizes && (
-					<fieldset>
-						<legend className="font-bold mb-1">
-							Select a size
-						</legend>
-						<ul className="flex flex-wrap gap-2">
-							{sizes.map((size) => (
-								<li key={size.size}>
-									<label className="block">
-										<input
-											className="peer sr-only"
-											name="size"
-											type="radio"
-											value={size.size}
-										/>
-										<span
-											className={clsx(
-												"block bg-neutral-100 py-1 px-2",
-												"peer-checked:bg-black peer-checked:text-white"
-											)}
-										>
-											{Number(size.size).toFixed(1)}
-										</span>
-									</label>
-								</li>
-							))}
-						</ul>
-					</fieldset>
-				)}
-				<hr className="my-2" />
-				<h2>Fulfillment method</h2>
-				<hr className="my-2" />
+					{paymentMethods}
 
-				{aboveAddToCart}
+					<div className="my-2">
+						<p className="text-sm text-neutral-500">{color}</p>
 
-				<button className="px-4 py-2 font-bold bg-black text-white my-2">
-					Add to Cart
-				</button>
+						{colorways && (
+							<ul className="flex gap-3">
+								{Object.entries(colorways).map(
+									([color, variant]) => (
+										<li key={color}>
+											<ProductImage
+												alt={`${name} - ${gender} - ${color}`}
+												sku={variant[0].sku}
+												width={85}
+											/>
+										</li>
+									)
+								)}
+							</ul>
+						)}
+					</div>
 
-				{belowAddToCart}
+					{sizes && (
+						<fieldset>
+							<legend className="font-bold mb-1">
+								Select a size
+							</legend>
+							<ul className="flex flex-wrap gap-2">
+								{sizes.map((size) => (
+									<li key={size.size}>
+										<label className="block">
+											<input
+												className="peer sr-only"
+												name="size"
+												type="radio"
+												value={size.size}
+											/>
+											<span
+												className={clsx(
+													"block bg-neutral-100 py-1 px-2",
+													"peer-checked:bg-black peer-checked:text-white"
+												)}
+											>
+												{Number(size.size).toFixed(1)}
+											</span>
+										</label>
+									</li>
+								))}
+							</ul>
+						</fieldset>
+					)}
+					<hr className="my-2" />
+					<h2>Fulfillment method</h2>
+					<hr className="my-2" />
+
+					{aboveAddToCart}
+
+					<button className="px-4 py-2 font-bold bg-black text-white my-2">
+						Add to Cart
+					</button>
+
+					{belowAddToCart}
+				</div>
 			</div>
-		</div>
+			<div className="py-4">
+				<p dangerouslySetInnerHTML={{ __html: model.description }} />
+			</div>
+		</>
 	);
 }
 
@@ -193,27 +198,28 @@ export function formatSizes(data: ProductDetailsResponse) {
 	}));
 }
 
-export function formatModel(data: ProductDetailsResponse) {
-	const [name, genderFromName] = data.model.name.split(" - ");
-	const gender = data.model.genders[0] || genderFromName;
+export function formatModel({ model }: ProductDetailsResponse) {
+	const [name, genderFromName] = model.name.split(" - ");
+	const gender = model.genders[0] || genderFromName;
 
 	return {
-		brand: data.model.brand,
+		brand: model.brand,
+		description: model.description,
 		gender: gender,
 		name: name,
 	};
 }
 
-export function formatStyle(data: ProductDetailsResponse) {
+export function formatStyle({ style }: ProductDetailsResponse) {
 	return {
-		color: data.style.color,
+		color: style.color,
 		price: {
-			listPrice: data.style.price.listPrice,
-			salePrice: data.style.price.salePrice,
-			formattedListPrice: data.style.price.formattedListPrice,
-			formattedSalePrice: data.style.price.formattedSalePrice,
+			listPrice: style.price.listPrice,
+			salePrice: style.price.salePrice,
+			formattedListPrice: style.price.formattedListPrice,
+			formattedSalePrice: style.price.formattedSalePrice,
 		},
-		sku: data.style.sku,
+		sku: style.sku,
 	};
 }
 
