@@ -4,6 +4,7 @@ import type {
 	Color,
 	ProductDetailsResponse,
 	SizeChart,
+	Sku,
 	StyleVariant,
 } from "src/pages/[locale]/product/details.json";
 import clsx from "clsx";
@@ -24,6 +25,7 @@ export default function PDP({
 	const { colorways, model, sizes, style } = formatProductDetails(props);
 	const { brand, gender, name } = model;
 	const { color, price, sku } = style;
+	const selectedSku = sku;
 
 	function PdpHeader({ className }: { className: string }) {
 		return (
@@ -46,7 +48,8 @@ export default function PDP({
 		<>
 			<div className="flex flex-col md:flex-row gap-4">
 				<PdpHeader className="md:hidden" />
-				<div className="flex-1 basis-auto" data-id="gallery">
+
+				<div className="flex-1 md:basis-2/3" data-id="gallery">
 					<ProductImage
 						alt={`${name} - ${gender} - ${color}`}
 						sku={sku}
@@ -64,55 +67,13 @@ export default function PDP({
 
 					{paymentMethods}
 
-					<div className="my-2">
-						<p className="text-sm text-neutral-500">{color}</p>
+					<ProductColorways
+						colorways={colorways}
+						model={model}
+						style={style}
+					/>
+					<ProductSizes sizes={sizes} />
 
-						{colorways && (
-							<ul className="flex gap-3">
-								{Object.entries(colorways).map(
-									([color, variant]) => (
-										<li key={color}>
-											<ProductImage
-												alt={`${name} - ${gender} - ${color}`}
-												sku={variant[0].sku}
-												width={85}
-											/>
-										</li>
-									)
-								)}
-							</ul>
-						)}
-					</div>
-
-					{sizes && (
-						<fieldset>
-							<legend className="font-bold mb-1">
-								Select a size
-							</legend>
-							<ul className="flex flex-wrap gap-2">
-								{sizes.map((size) => (
-									<li key={size.size}>
-										<label className="block">
-											<input
-												className="peer sr-only"
-												name="size"
-												type="radio"
-												value={size.size}
-											/>
-											<span
-												className={clsx(
-													"block bg-neutral-100 py-1 px-2",
-													"peer-checked:bg-black peer-checked:text-white"
-												)}
-											>
-												{Number(size.size).toFixed(1)}
-											</span>
-										</label>
-									</li>
-								))}
-							</ul>
-						</fieldset>
-					)}
 					<hr className="my-2" />
 					<h2>Fulfillment method</h2>
 					<hr className="my-2" />
@@ -130,6 +91,98 @@ export default function PDP({
 				<p dangerouslySetInnerHTML={{ __html: model.description }} />
 			</div>
 		</>
+	);
+}
+
+export function ColorwayLink({
+	model,
+	selectedSku,
+	variant,
+}: { selectedSku: Sku; variant: StyleVariant } & Pick<
+	FormattedPdpProps,
+	"model"
+>) {
+	const { color, sku } = variant;
+	const isSelected = selectedSku === sku;
+	return (
+		<a
+			href={`/en/product/~/${sku}`}
+			className={clsx(
+				"block outline-1 hover:outline hover:outline-black",
+				"relative after:content-[''] after:absolute after:bottom-0 after:w-full after:h-[3px]",
+				{ "after:bg-black": isSelected }
+			)}
+		>
+			<ProductImage
+				alt={`${model.name} - ${model.gender} - ${color}`}
+				sku={sku}
+				width={100}
+			/>
+		</a>
+	);
+}
+export function ProductColorways({
+	colorways,
+	model,
+	style,
+}: Pick<FormattedPdpProps, "colorways" | "model" | "style">) {
+	return (
+		<div className="my-2">
+			<p className="text-sm text-neutral-500">{style.color}</p>
+
+			{colorways && (
+				<ul className="grid grid-cols-5 gap-3">
+					{Object.entries(colorways).map(([color, variants]) => (
+						<li key={color}>
+							<ColorwayLink
+								model={model}
+								selectedSku={style.sku}
+								variant={variants[0]}
+							/>
+						</li>
+					))}
+				</ul>
+			)}
+		</div>
+	);
+}
+
+export function ProductSizes({
+	sizes,
+}: {
+	sizes: ReturnType<typeof formatSizes>;
+}) {
+	if (!sizes?.length) {
+		return null;
+	}
+	return (
+		<fieldset>
+			<legend className="font-bold mb-1">Select a size</legend>
+			<ul className="flex flex-wrap gap-2">
+				{sizes.map((size) => (
+					<li key={size.size}>
+						<label className="block">
+							<input
+								className="peer sr-only"
+								name="size"
+								type="radio"
+								value={size.size}
+							/>
+							<span
+								className={clsx(
+									"block py-2 px-2",
+									"bg-neutral-100 border border-transparent rounded",
+									"hover:border-neutral-200",
+									"peer-checked:bg-black peer-checked:text-white"
+								)}
+							>
+								{Number(size.size).toFixed(1)}
+							</span>
+						</label>
+					</li>
+				))}
+			</ul>
+		</fieldset>
 	);
 }
 
@@ -168,6 +221,8 @@ type PdpSlots = Partial<Record<PdpSlotName | "content", React.ReactNode>>;
 type PdpSlotList = Record<PdpSlotName | "content", React.ReactNode[]>;
 
 type Colorways = Record<Color, StyleVariant[]>;
+
+type FormattedPdpProps = ReturnType<typeof formatProductDetails>;
 
 export function formatColorways(data: ProductDetailsResponse) {
 	return data.styleVariants.reduce((all, variant) => {
