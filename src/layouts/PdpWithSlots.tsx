@@ -96,11 +96,11 @@ export function FlxCashAboveAtcTest({
 	// fake A/B test flag: //
 	const testFlxCashAboveATC = false; // true; //
 
-	slot = useSlot() || slot;
+	const slotName = useSlot() || slot;
 
 	const showFlxCash =
-		(testFlxCashAboveATC && slot === "aboveAddToCart") ||
-		(!testFlxCashAboveATC && slot === "belowAddToCart");
+		(testFlxCashAboveATC && slotName === "aboveAddToCart") ||
+		(!testFlxCashAboveATC && slotName === "belowAddToCart");
 
 	return showFlxCash ? (
 		<FlxCashPdpPoints salePrice={salePrice} />
