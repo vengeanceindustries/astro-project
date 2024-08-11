@@ -3,7 +3,6 @@ import ProductImage from "@components/ProductImage";
 import type {
 	Color,
 	ProductDetailsResponse,
-	SizeChart,
 	Sku,
 	StyleVariant,
 } from "src/pages/[locale]/product/details.json";
@@ -11,42 +10,32 @@ import clsx from "clsx";
 import { createSlot } from "@components/Slot";
 export type { ProductDetailsResponse };
 
-export const { Slot, useSlot } = createSlot<PdpSlotName>();
-
 const imgWidth = 550;
+
+export type PdpSlotName =
+	| "aboveAddToCart"
+	| "belowAddToCart"
+	| "paymentMethods"
+	| "shippingMessage";
+
+export const { Slot, useSlot } = createSlot<PdpSlotName>();
 
 export default function PDP({
 	aboveAddToCart,
 	belowAddToCart,
 	content,
 	paymentMethods,
+	shippingMessage,
 	...props
 }: PdpSlots & ProductDetailsResponse) {
 	const { colorways, model, sizes, style } = formatProductDetails(props);
-	const { brand, gender, name } = model;
+	const { gender, name } = model;
 	const { color, price, sku } = style;
-
-	function PdpHeader({ className }: { className: string }) {
-		return (
-			<header className={className}>
-				<h1 className="text-2xl font-black">{name}</h1>
-				<p className="text-sm mb-1">{gender}</p>
-				<p className="text-sm">
-					<a
-						href={`/category/brands/${brand}`}
-						className="text-inherit underline"
-					>
-						Explore {brand}
-					</a>
-				</p>
-			</header>
-		);
-	}
 
 	return (
 		<>
 			<div className="flex flex-col md:flex-row gap-4">
-				<PdpHeader className="md:hidden" />
+				<PdpHeader className="md:hidden" model={model} />
 
 				<div className="flex-1 md:basis-2/3" data-id="gallery">
 					<ProductImage
@@ -56,17 +45,15 @@ export default function PDP({
 					/>
 				</div>
 				<div className="flex-1 md:basis-1/3">
-					<PdpHeader className="hidden md:block" />
+					<PdpHeader className="hidden md:block" model={model} />
 
 					<p className="my-2">
-						<del className="">{price.formattedListPrice}</del>{" "}
-						<ins className="no-underline text-red-500">
-							{price.formattedSalePrice}
-						</ins>
+						<ProductPrice price={price} />
 					</p>
 
 					{paymentMethods}
 
+					{/* <PdpColorways {...{ colorways, model, style }} /> */}
 					<PdpColorways
 						colorways={colorways}
 						model={model}
@@ -74,8 +61,12 @@ export default function PDP({
 					/>
 					<PdpSizes sizes={sizes} />
 
+					{shippingMessage}
+
 					<hr className="my-2" />
-					<h2>Fulfillment method</h2>
+					<fieldset>
+						<legend>Fulfillment method</legend>
+					</fieldset>
 					<hr className="my-2" />
 
 					{aboveAddToCart}
@@ -90,6 +81,41 @@ export default function PDP({
 			<div className="py-4">
 				<p dangerouslySetInnerHTML={{ __html: model.description }} />
 			</div>
+		</>
+	);
+}
+
+export function PdpHeader({
+	className,
+	model,
+}: { className: string } & Pick<FormattedPdpProps, "model">) {
+	return (
+		<header className={className}>
+			<h1 className="text-2xl font-black">{model.name}</h1>
+			<p className="text-sm mb-1">{model.gender}</p>
+			<p className="text-sm">
+				<a
+					href={`/category/brands/${model.brand}`}
+					className="text-inherit underline"
+				>
+					Explore {model.brand}
+				</a>
+			</p>
+		</header>
+	);
+}
+
+export function ProductPrice({
+	price,
+}: {
+	price: ReturnType<typeof formatPrice>;
+}) {
+	return (
+		<>
+			<del className="">{price.formattedListPrice}</del>{" "}
+			<ins className="no-underline text-red-500">
+				{price.formattedSalePrice}
+			</ins>
 		</>
 	);
 }
@@ -190,6 +216,7 @@ export function PdpWithChildren({
 		aboveAddToCart: [],
 		belowAddToCart: [],
 		paymentMethods: [],
+		shippingMessage: [],
 		content: [],
 	};
 
@@ -209,10 +236,6 @@ export function PdpWithChildren({
 PDP.WithChildren = PdpWithChildren;
 PDP.Slot = Slot;
 
-export type PdpSlotName =
-	| "aboveAddToCart"
-	| "belowAddToCart"
-	| "paymentMethods";
 type PdpSlots = Partial<Record<PdpSlotName | "content", React.ReactNode>>;
 type PdpSlotList = Record<PdpSlotName | "content", React.ReactNode[]>;
 
@@ -261,16 +284,27 @@ export function formatModel({ model }: ProductDetailsResponse) {
 	};
 }
 
+export function formatPrice({ style }: Pick<ProductDetailsResponse, "style">) {
+	return {
+		listPrice: style.price.listPrice,
+		salePrice: style.price.salePrice,
+		formattedListPrice: style.price.formattedListPrice,
+		formattedSalePrice: style.price.formattedSalePrice,
+	};
+}
+
 export function formatStyle({ style }: ProductDetailsResponse) {
 	return {
+		// active: style.active, // won't recieve data if not active [currently]
+		ageBuckets: style.ageBuckets,
 		color: style.color,
-		price: {
-			listPrice: style.price.listPrice,
-			salePrice: style.price.salePrice,
-			formattedListPrice: style.price.formattedListPrice,
-			formattedSalePrice: style.price.formattedSalePrice,
-		},
+		eligiblePaymentTypes: style.eligiblePaymentTypes,
+		flagsAndRestrictions: style.flagsAndRestrictions,
+		imageUrl: style.imageUrl,
+		launchAttributes: style.launchAttributes,
+		price: formatPrice({ style }),
 		sku: style.sku,
+		width: style.width,
 	};
 }
 
