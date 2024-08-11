@@ -56,7 +56,7 @@ export default function PDP({
 						model={model}
 						style={style}
 					/>
-					<PdpSizes sizes={sizes} />
+					<PdpSizes sizes={sizes} style={style} />
 
 					{shippingMessage}
 
@@ -216,34 +216,55 @@ export function PdpColorways({
 	);
 }
 
-export function PdpSizes({ sizes }: { sizes: ReturnType<typeof formatSizes> }) {
+export function PdpSizeField(size: FormattedPdpSize) {
+	const disabled = !size.active || !size.inventory.inventoryAvailable;
+	return (
+		<label className="block w-20 text-center text-sm font-semibold cursor-pointer">
+			<input
+				aria-disabled={disabled}
+				className="peer sr-only"
+				disabled={disabled}
+				name="size"
+				type="radio"
+				value={size.size}
+			/>
+			<span
+				className={clsx(
+					"block py-2 px-2",
+					"bg-neutral-100 border border-transparent rounded",
+					"hover:border-black",
+					"peer-focus:ring peer-focus:ring-purple-500",
+					"peer-checked:bg-black peer-checked:text-white",
+					// "peer-aria-disabled:opacity-50 peer-aria-disabled:border-transparent peer-aria-disabled:cursor-not-allowed",
+					"peer-disabled:opacity-50 peer-disabled:border-transparent peer-disabled:cursor-not-allowed",
+					"peer-disabled:border-neutral-300 peer-disabled:bg-gradient-to-br from-[49%] from-white via-50% via-neutral-500 to-[51%] to-white"
+				)}
+			>
+				{Number(size.size).toFixed(1)}
+			</span>
+		</label>
+	);
+}
+
+export function PdpSizes({
+	sizes,
+	style,
+}: Pick<FormattedPdpProps, "sizes" | "style">) {
 	if (!sizes?.length) {
 		return null;
 	}
 	return (
-		<fieldset>
-			<legend className="font-bold mb-1">Select a size</legend>
+		<fieldset className="my-4">
+			<legend className="font-semibold mb-1">Select a size</legend>
+			{style.width && (
+				<p className="text-xs font-normal text-neutral-500 mb-2">
+					{style.width}
+				</p>
+			)}
 			<ul className="flex flex-wrap gap-2">
 				{sizes.map((size) => (
-					<li key={size.size}>
-						<label className="block">
-							<input
-								className="peer sr-only"
-								name="size"
-								type="radio"
-								value={size.size}
-							/>
-							<span
-								className={clsx(
-									"block py-2 px-2",
-									"bg-neutral-100 border border-transparent rounded",
-									"hover:border-neutral-200",
-									"peer-checked:bg-black peer-checked:text-white"
-								)}
-							>
-								{Number(size.size).toFixed(1)}
-							</span>
-						</label>
+					<li key={size.size} className="block">
+						<PdpSizeField {...size} />
 					</li>
 				))}
 			</ul>
@@ -286,6 +307,8 @@ type Colorways = Record<Color, StyleVariant[]>;
 
 type FormattedPdpProps = ReturnType<typeof formatProductDetails>;
 
+type FormattedPdpSize = ReturnType<typeof formatSize>;
+
 export function formatColorways(data: ProductDetailsResponse) {
 	return data.styleVariants.reduce((all, variant) => {
 		if (all[variant.color]) {
@@ -297,8 +320,8 @@ export function formatColorways(data: ProductDetailsResponse) {
 	}, {} as Colorways);
 }
 
-export function formatSizes(data: ProductDetailsResponse) {
-	return data.sizes.map((size) => ({
+export function formatSize(size: Size) {
+	return {
 		size: size.size,
 		strippedSize: size.strippedSize,
 		productNumber: size.productNumber,
@@ -312,7 +335,7 @@ export function formatSizes(data: ProductDetailsResponse) {
 			warehouseInventoryAvailable:
 				size.inventory.warehouseInventoryAvailable,
 		},
-	}));
+	};
 }
 
 export function formatModel({ model }: ProductDetailsResponse) {
@@ -355,7 +378,7 @@ export function formatProductDetails(data: ProductDetailsResponse) {
 	return {
 		colorways: formatColorways(data),
 		model: formatModel(data),
-		sizes: formatSizes(data),
+		sizes: data.sizes.map(formatSize),
 		sizeChart: data.sizeChart,
 		style: formatStyle(data),
 	};
