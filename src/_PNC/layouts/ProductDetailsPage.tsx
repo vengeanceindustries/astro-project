@@ -21,11 +21,20 @@ export type PdpSlotName =
 
 export const { createChildrenSlots, Slot, useSlot } = createSlot<PdpSlotName>();
 
+function useSelectedSize<Elem extends HTMLInputElement>() {
+	const [selectedSize, setSize] = useState("");
+
+	const onChange: React.ChangeEventHandler<Elem> = (e) => {
+		setSize(e.currentTarget.value);
+	};
+	return [selectedSize, onChange] as const;
+}
+
 export default function PDP({ slots, ...props }: PdpProps) {
 	const { colorways, model, sizes, style } = formatProductDetails(props);
 	const { gender, name } = model;
 	const { color, price, sku } = style;
-	const [selectedSize, setSize] = useState("");
+	const [selectedSize, onChange] = useSelectedSize();
 
 	return (
 		<>
@@ -49,11 +58,7 @@ export default function PDP({ slots, ...props }: PdpProps) {
 						selectedSize={selectedSize}
 					/>
 
-					<PdpSizes
-						onChange={(e) => setSize(e.currentTarget.value)}
-						sizes={sizes}
-						style={style}
-					/>
+					<PdpSizes onChange={onChange} sizes={sizes} style={style} />
 
 					{slots.shippingMessage}
 
