@@ -2,7 +2,9 @@ import React, { useState, type PropsWithChildren } from "react";
 import { createSlot } from "@components/Slot";
 import type { ProductDetailsResponse } from "@PNC/layouts/ProductDetails";
 import {
+	PdpAddToCart,
 	PdpColorways,
+	PdpFulfillment,
 	PdpGallery,
 	PdpHeader,
 	PdpSizes,
@@ -24,13 +26,6 @@ export default function PDP({ slots, ...props }: PdpProps) {
 	const { gender, name } = model;
 	const { color, price, sku } = style;
 	const [selectedSize, setSize] = useState("");
-	const {
-		aboveAddToCart,
-		belowAddToCart,
-		content,
-		paymentMethods,
-		shippingMessage,
-	} = slots;
 
 	return (
 		<>
@@ -38,48 +33,37 @@ export default function PDP({ slots, ...props }: PdpProps) {
 				<PdpHeader className="md:hidden" model={model} />
 
 				<div className="flex-1 lg:basis-2/3" data-id="gallery">
-					<PdpGallery {...{ model, style }} />
+					<PdpGallery model={model} style={style} />
 				</div>
 				<div className="flex-1 lg:basis-1/3 p-4 bg-white">
 					<PdpHeader className="hidden md:block" model={model} />
 
 					<p className="my-2">
-						<ProductPrice price={price} />
+						<ProductPrice {...price} showSalePercent />
 					</p>
 
-					{paymentMethods}
+					{slots.paymentMethods}
 
-					{/* <PdpColorways {...{ colorways, model, style }} /> */}
 					<PdpColorways
-						colorways={colorways}
-						model={model}
+						{...{ colorways, model, style }}
 						selectedSize={selectedSize}
-						style={style}
 					/>
-					{/* <p>
-						<strong>{selectedSize}</strong>
-					</p> */}
+
 					<PdpSizes
 						onChange={(e) => setSize(e.currentTarget.value)}
 						sizes={sizes}
 						style={style}
 					/>
 
-					{shippingMessage}
+					{slots.shippingMessage}
 
-					<hr className="my-2" />
-					<fieldset>
-						<legend>Fulfillment method</legend>
-					</fieldset>
-					<hr className="my-2" />
+					<PdpFulfillment />
 
-					{aboveAddToCart}
+					{slots.aboveAddToCart}
 
-					<button className="px-4 py-2 font-bold bg-black text-white my-2">
-						Add to Cart
-					</button>
+					<PdpAddToCart />
 
-					{belowAddToCart}
+					{slots.belowAddToCart}
 				</div>
 			</div>
 			<div className="py-4">

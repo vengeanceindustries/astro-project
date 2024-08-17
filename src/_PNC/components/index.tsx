@@ -78,18 +78,33 @@ export function PdpGallery({
 }
 
 export function ProductPrice({
-	price,
-}: {
-	price: ReturnType<typeof formatPrice>;
+	formattedListPrice,
+	formattedSalePrice,
+	listPrice,
+	salePrice,
+	showSalePercent = true,
+}: ReturnType<typeof formatPrice> & {
+	showSalePercent?: boolean;
 }) {
-	return (
-		<>
-			<del className="">{price.formattedListPrice}</del>{" "}
-			<ins className="no-underline text-red-500">
-				{price.formattedSalePrice}
-			</ins>
-		</>
-	);
+	if (salePrice < listPrice) {
+		const salePercent = showSalePercent
+			? Math.round(((listPrice - salePrice) / salePrice) * 100)
+			: undefined;
+		return (
+			<p>
+				<ins className="text-lg no-underline text-red-600 mr-2">
+					{formattedSalePrice}
+				</ins>
+				<del className="text-sm">{formattedListPrice}</del>{" "}
+				{salePercent && (
+					<div className="text-xs text-red-700">
+						{salePercent}% off
+					</div>
+				)}
+			</p>
+		);
+	}
+	return <p>{formattedSalePrice}</p>;
 }
 
 export function PdpColorwayLink({
@@ -227,6 +242,26 @@ export function PdpSizes({
 				))}
 			</ul>
 		</fieldset>
+	);
+}
+
+export function PdpFulfillment() {
+	return (
+		<>
+			<hr className="my-2" />
+			<fieldset>
+				<legend>Fulfillment method</legend>
+			</fieldset>
+			<hr className="my-2" />
+		</>
+	);
+}
+
+export function PdpAddToCart() {
+	return (
+		<button className="px-4 py-2 font-bold bg-black text-white my-2">
+			Add to Cart
+		</button>
 	);
 }
 
