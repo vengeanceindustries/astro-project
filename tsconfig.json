@@ -5,6 +5,9 @@
 		"paths": {
 			"@components/*": ["src/components/*"],
 			"@layouts/*": ["src/layouts/*"],
+			"@LOY/*": ["src/_LOY/*"],
+			"@PNC/*": ["src/_PNC/*"],
+			"@SNB/*": ["src/_SNB/*"],
 			"@utils/*": ["src/utils/*"]
 		},
 		"jsx": "react-jsx",

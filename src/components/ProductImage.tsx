@@ -1,4 +1,3 @@
-import type { Sku } from "@layouts/ProductDetails";
 import clsx from "clsx";
 
 const DEFAULT_WIDTH = 100;
@@ -31,7 +30,7 @@ export default function ProductImage({
 	);
 }
 
-type ProductImageProps = { sku?: Sku } & React.DetailedHTMLProps<
+type ProductImageProps = { sku?: string } & React.DetailedHTMLProps<
 	React.ImgHTMLAttributes<HTMLImageElement>,
 	HTMLImageElement
 >;
