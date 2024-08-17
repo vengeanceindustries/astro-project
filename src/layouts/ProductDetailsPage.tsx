@@ -19,20 +19,20 @@ export type PdpSlotName =
 	| "paymentMethods"
 	| "shippingMessage";
 
-export const { Slot, useSlot } = createSlot<PdpSlotName>();
+export const { createChildrenSlots, Slot, useSlot } = createSlot<PdpSlotName>();
 
-export default function PDP({
-	aboveAddToCart,
-	belowAddToCart,
-	content,
-	paymentMethods,
-	shippingMessage,
-	...props
-}: PdpSlots & ProductDetailsResponse) {
+export default function PDP({ slots, ...props }: PdpProps) {
 	const { colorways, model, sizes, style } = formatProductDetails(props);
 	const { gender, name } = model;
 	const { color, price, sku } = style;
 	const [selectedSize, setSize] = useState("");
+	const {
+		aboveAddToCart,
+		belowAddToCart,
+		content,
+		paymentMethods,
+		shippingMessage,
+	} = slots;
 
 	return (
 		<>
@@ -314,32 +314,16 @@ export function PdpWithChildren({
 	children,
 	...props
 }: PropsWithChildren<ProductDetailsResponse>) {
-	const slots: PdpSlotList = {
-		aboveAddToCart: [],
-		belowAddToCart: [],
-		paymentMethods: [],
-		shippingMessage: [],
-		content: [],
-	};
+	const slots = createChildrenSlots(children);
 
-	React.Children.forEach(children, (child, i) => {
-		if (!React.isValidElement(child)) return;
-
-		if (child.type === Slot) {
-			const name = child.props.name as PdpSlotName;
-			if (name in slots) slots[name].push(child);
-			return;
-		}
-	});
-
-	return <PDP {...props} {...slots} />;
+	return <PDP {...props} slots={slots} />;
 }
 
 PDP.WithChildren = PdpWithChildren;
 PDP.Slot = Slot;
 
-type PdpSlots = Partial<Record<PdpSlotName | "content", React.ReactNode>>;
-type PdpSlotList = Record<PdpSlotName | "content", React.ReactNode[]>;
+type PdpSlots = ReturnType<typeof createChildrenSlots>;
+type PdpProps = { slots: PdpSlots } & ProductDetailsResponse;
 
 type Colorways = Record<Color, StyleVariant[]>;
 
