@@ -30,10 +30,8 @@ function useSelectedSize<Elem extends HTMLInputElement>() {
 	return [selectedSize, onChange] as const;
 }
 
-export default function PDP({ slots, ...props }: PdpProps) {
+export function PDP({ slots, ...props }: PdpProps) {
 	const { colorways, model, sizes, style } = formatProductDetails(props);
-	const { gender, name } = model;
-	const { color, price, sku } = style;
 	const [selectedSize, onChange] = useSelectedSize();
 
 	return (
@@ -48,10 +46,10 @@ export default function PDP({ slots, ...props }: PdpProps) {
 					<PdpHeader className="hidden md:block" model={model} />
 
 					<p className="my-2">
-						<ProductPrice {...price} showSalePercent />
+						<ProductPrice {...style.price} showSalePercent />
 					</p>
 
-					{slots.paymentMethods}
+					{slots?.paymentMethods}
 
 					<PdpColorways
 						{...{ colorways, model, style }}
@@ -60,15 +58,15 @@ export default function PDP({ slots, ...props }: PdpProps) {
 
 					<PdpSizes onChange={onChange} sizes={sizes} style={style} />
 
-					{slots.shippingMessage}
+					{slots?.shippingMessage}
 
 					<PdpFulfillment />
 
-					{slots.aboveAddToCart}
+					{slots?.aboveAddToCart}
 
 					<PdpAddToCart />
 
-					{slots.belowAddToCart}
+					{slots?.belowAddToCart}
 				</div>
 			</div>
 			<div className="py-4">
@@ -83,12 +81,12 @@ export function PdpWithChildren({
 	...props
 }: PropsWithChildren<ProductDetailsResponse>) {
 	const slots = createChildrenSlots(children);
-
 	return <PDP {...props} slots={slots} />;
 }
 
+type PdpSlots = ReturnType<typeof createChildrenSlots>;
+type PdpProps = { slots?: Partial<PdpSlots> } & ProductDetailsResponse;
+
+export default PDP;
 PDP.WithChildren = PdpWithChildren;
 PDP.Slot = Slot;
-
-type PdpSlots = ReturnType<typeof createChildrenSlots>;
-type PdpProps = { slots: PdpSlots } & ProductDetailsResponse;
