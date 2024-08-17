@@ -1,9 +1,15 @@
 import React, { type PropsWithChildren } from "react";
 import { createContext, useContext } from "react";
 
+/**
+ * create typed 'slots' object for parent, Slot component, and useSlot context hook
+ */
 export function createSlot<SlotName extends string>() {
 	const SlotContext = createContext<SlotName | undefined>(undefined);
 
+	/**
+	 * Slot component typed to parentslot names, with name context
+	 */
 	function Slot({ children, name }: PropsWithChildren<{ name: SlotName }>) {
 		return (
 			<SlotContext.Provider value={name}>
@@ -12,15 +18,20 @@ export function createSlot<SlotName extends string>() {
 		);
 	}
 
+	/**
+	 * access Slot component's name via context
+	 */
 	function useSlot() {
 		return useContext(SlotContext);
 	}
 
 	type Nodes = React.ReactNode[];
-	type SlotList = { [N in SlotName]?: Nodes } & { content: Nodes };
 
+	/**
+	 * provide slots object based on parent component's children
+	 */
 	function createChildrenSlots(children: React.ReactNode) {
-		const slots: SlotList = {
+		const slots: { [N in SlotName]?: Nodes } & { content: Nodes } = {
 			content: [],
 		};
 
