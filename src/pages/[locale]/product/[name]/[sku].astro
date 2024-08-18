@@ -1,4 +1,5 @@
 ---
+import { formatProductDetails } from "@PNC/components";
 import Layout from "@layouts/Layout.astro";
 import PdpWithSlots from "@layouts/PdpWithSlots";
 import { getBannerDomain } from "@utils/banner.configs";
@@ -10,7 +11,8 @@ const bannerDomain = getBannerDomain(Astro);
 const route = `${bannerDomain}/zgw/product-core/v1/pdp//sku/${sku}`;
 const headers: HeadersInit = { "x-api-lang": locale };
 // const route = `${Astro.url.origin}/product/details.json?sku=${sku}`;
-const data = await fetch(route, { headers }).then((r) => r.json());
+const resp = await fetch(route, { headers }).then((r) => r.json());
+const data = formatProductDetails(resp);
 
 const searchParams = Astro.url.searchParams;
 const selectedSize = searchParams.get("size");
@@ -26,10 +28,10 @@ const selectedSize = searchParams.get("size");
 
 	<h3 class="text-xl bg-green-500/30 mb-2">selectedSize? {selectedSize}</h3>
 	{
-		Object.keys(data).map((key) => (
+		Object.keys(resp).map((key) => (
 			<details open={false} class="mx-2">
 				<summary class="px-2 py-1 cursor-pointer">{key}</summary>
-				<pre class="text-xs"><!-- -->{JSON.stringify(data[key], null, "\t")}<!-- --></pre>
+				<pre class="text-xs"><!-- -->{JSON.stringify(resp[key], null, "\t")}<!-- --></pre>
 			</details>
 		))
 	}

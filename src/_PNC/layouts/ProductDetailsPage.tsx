@@ -1,6 +1,5 @@
 import React, { useState, type PropsWithChildren } from "react";
 import { createSlot } from "@components/Slot";
-import type { ProductDetailsResponse } from "@PNC/layouts/ProductDetails";
 import {
 	PdpAddToCart,
 	PdpColorways,
@@ -9,9 +8,9 @@ import {
 	PdpHeader,
 	PdpSizes,
 	ProductPrice,
-	formatProductDetails,
+	type ProductDetailsFormatted,
 } from "@PNC/components";
-export type { ProductDetailsResponse };
+export type { ProductDetailsFormatted };
 
 export type PdpSlotName =
 	| "aboveAddToCart"
@@ -30,8 +29,8 @@ function useSelectedSize<Elem extends HTMLInputElement>() {
 	return [selectedSize, onChange] as const;
 }
 
-export function PDP({ slots, ...props }: PdpProps) {
-	const { colorways, model, sizes, style } = formatProductDetails(props);
+export function PDP({ colorways, model, sizes, style, slots }: PdpProps) {
+	// const { colorways, model, sizes, style } = formatProductDetails(props);
 	const [selectedSize, onChange] = useSelectedSize();
 
 	return (
@@ -79,13 +78,13 @@ export function PDP({ slots, ...props }: PdpProps) {
 export function PdpWithChildren({
 	children,
 	...props
-}: PropsWithChildren<ProductDetailsResponse>) {
+}: PropsWithChildren<ProductDetailsFormatted>) {
 	const slots = createChildrenSlots(children);
 	return <PDP {...props} slots={slots} />;
 }
 
 type PdpSlots = ReturnType<typeof createChildrenSlots>;
-type PdpProps = { slots?: Partial<PdpSlots> } & ProductDetailsResponse;
+type PdpProps = { slots?: Partial<PdpSlots> } & ProductDetailsFormatted;
 
 export default PDP;
 PDP.WithChildren = PdpWithChildren;

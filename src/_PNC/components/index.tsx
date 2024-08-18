@@ -14,7 +14,7 @@ const imgWidth = 550;
 export function PdpHeader({
 	className,
 	model,
-}: { className: string } & Pick<FormattedPdpProps, "model">) {
+}: { className: string } & Pick<ProductDetailsFormatted, "model">) {
 	return (
 		<header className={className}>
 			<h1 className="text-2xl font-black">{model.name}</h1>
@@ -34,7 +34,7 @@ export function PdpHeader({
 export function PdpGallery({
 	model,
 	style,
-}: Pick<FormattedPdpProps, "model" | "style">) {
+}: Pick<ProductDetailsFormatted, "model" | "style">) {
 	const alt = `${model.name} - ${model.gender} - ${style.color}`;
 	const variants = style.imageUrl?.variants;
 
@@ -86,10 +86,12 @@ export function ProductPrice({
 }: ReturnType<typeof formatPrice> & {
 	showSalePercent?: boolean;
 }) {
+	console.log("Price:", { listPrice, salePrice });
 	if (salePrice < listPrice) {
 		const salePercent = showSalePercent
 			? Math.round(((listPrice - salePrice) / salePrice) * 100)
 			: undefined;
+		console.log("Price:", { salePercent });
 		return (
 			<p>
 				<ins className="text-lg no-underline text-red-600 mr-2">
@@ -116,7 +118,7 @@ export function PdpColorwayLink({
 	selectedSku: Sku;
 	variant: StyleVariant;
 	variants: StyleVariant[];
-} & Pick<FormattedPdpProps, "model">) {
+} & Pick<ProductDetailsFormatted, "model">) {
 	const { color, sku } = variant;
 	const isSelected = selectedSku === sku;
 	const isActive =
@@ -153,7 +155,7 @@ export function PdpColorways({
 	model,
 	selectedSize,
 	style,
-}: Pick<FormattedPdpProps, "colorways" | "model" | "style"> & {
+}: Pick<ProductDetailsFormatted, "colorways" | "model" | "style"> & {
 	selectedSize?: string;
 }) {
 	return (
@@ -220,7 +222,7 @@ export function PdpSizes({
 	onChange,
 	sizes,
 	style,
-}: Pick<FormattedPdpProps, "sizes" | "style"> & {
+}: Pick<ProductDetailsFormatted, "sizes" | "style"> & {
 	onChange: React.ChangeEventHandler<HTMLInputElement>;
 }) {
 	if (!sizes?.length) {
@@ -269,9 +271,9 @@ export function PdpAddToCart() {
 
 type Colorways = Record<Color, StyleVariant[]>;
 
-type FormattedPdpProps = ReturnType<typeof formatProductDetails>;
-
 type FormattedPdpSize = ReturnType<typeof formatSize>;
+
+export type ProductDetailsFormatted = ReturnType<typeof formatProductDetails>;
 
 // UTILS //
 

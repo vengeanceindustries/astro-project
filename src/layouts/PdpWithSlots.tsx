@@ -1,10 +1,10 @@
 import PDP, {
 	useSlot,
 	type PdpSlotName,
-	type ProductDetailsResponse,
+	type ProductDetailsFormatted,
 } from "@PNC/layouts/ProductDetailsPage";
 
-export default function PdpWithSlots(data: ProductDetailsResponse) {
+export default function PdpWithSlots(data: ProductDetailsFormatted) {
 	const salePrice = data.style.price.salePrice;
 
 	return (
