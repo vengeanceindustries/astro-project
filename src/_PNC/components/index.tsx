@@ -1,13 +1,16 @@
 import React from "react";
 import ProductImage from "@components/ProductImage";
-import type {
-	Color,
-	ProductDetailsResponse,
-	Size,
-	Sku,
-	StyleVariant,
-} from "@PNC/layouts/ProductDetails";
+import type { Sku, StyleVariant } from "@PNC/layouts/ProductDetails";
 import clsx from "clsx";
+import {
+	type ProductDetailsFormatted,
+	type formatPrice,
+} from "@PNC/components/utils";
+export {
+	type FormattedPdpSize,
+	type ProductDetailsFormatted,
+} from "@PNC/components/utils";
+export { PdpSizes } from "@PNC/components/PdpSizes";
 
 const imgWidth = 550;
 
@@ -182,71 +185,6 @@ export function PdpColorways({
 	);
 }
 
-export function PdpSizeField({
-	onChange,
-	...size
-}: FormattedPdpSize & {
-	onChange: React.ChangeEventHandler<HTMLInputElement>;
-}) {
-	const disabled = !size.active || !size.inventory.inventoryAvailable;
-	return (
-		<label className="block w-20 text-center text-sm font-semibold cursor-pointer">
-			<input
-				aria-disabled={disabled}
-				className="peer sr-only"
-				disabled={disabled}
-				name="size"
-				onChange={onChange}
-				type="radio"
-				value={size.size}
-			/>
-			<span
-				className={clsx(
-					"block py-2 px-2",
-					"bg-neutral-100 border border-transparent rounded",
-					"hover:border-black",
-					"peer-focus:ring peer-focus:ring-purple-500",
-					"peer-checked:bg-black peer-checked:text-white",
-					// "peer-aria-disabled:opacity-50 peer-aria-disabled:border-transparent peer-aria-disabled:cursor-not-allowed",
-					"peer-disabled:opacity-50 peer-disabled:border-transparent peer-disabled:cursor-not-allowed",
-					"peer-disabled:border-neutral-300 peer-disabled:bg-gradient-to-br from-[49%] from-white via-50% via-neutral-500 to-[51%] to-white"
-				)}
-			>
-				{Number(size.size).toFixed(1)}
-			</span>
-		</label>
-	);
-}
-
-export function PdpSizes({
-	onChange,
-	sizes,
-	style,
-}: Pick<ProductDetailsFormatted, "sizes" | "style"> & {
-	onChange: React.ChangeEventHandler<HTMLInputElement>;
-}) {
-	if (!sizes?.length) {
-		return null;
-	}
-	return (
-		<fieldset className="my-4">
-			<legend className="font-semibold mb-1">Select a size</legend>
-			{style.width && (
-				<p className="text-xs font-normal text-neutral-500 mb-2">
-					{style.width}
-				</p>
-			)}
-			<ul className="flex flex-wrap gap-2">
-				{sizes.map((size) => (
-					<li key={size.size} className="block">
-						<PdpSizeField {...size} onChange={onChange} />
-					</li>
-				))}
-			</ul>
-		</fieldset>
-	);
-}
-
 export function PdpFulfillment() {
 	return (
 		<>
@@ -265,89 +203,4 @@ export function PdpAddToCart() {
 			Add to Cart
 		</button>
 	);
-}
-
-// TYPES //
-
-type Colorways = Record<Color, StyleVariant[]>;
-
-type FormattedPdpSize = ReturnType<typeof formatSize>;
-
-export type ProductDetailsFormatted = ReturnType<typeof formatProductDetails>;
-
-// UTILS //
-
-export function formatColorways(data: ProductDetailsResponse) {
-	return data.styleVariants.reduce((all, variant) => {
-		if (all[variant.color]) {
-			all[variant.color].push(variant);
-		} else {
-			all[variant.color] = [variant];
-		}
-		return all;
-	}, {} as Colorways);
-}
-
-export function formatSize(size: Size) {
-	return {
-		size: size.size,
-		strippedSize: size.strippedSize,
-		productNumber: size.productNumber,
-		productWebKey: size.productWebKey,
-		active: size.active,
-		inventory: {
-			dropshipInventoryAvailable:
-				size.inventory.dropshipInventoryAvailable,
-			inventoryAvailable: size.inventory.inventoryAvailable,
-			storeInventoryAvailable: size.inventory.storeInventoryAvailable,
-			warehouseInventoryAvailable:
-				size.inventory.warehouseInventoryAvailable,
-		},
-	};
-}
-
-export function formatModel({ model }: ProductDetailsResponse) {
-	const [name, genderFromName] = model.name.split(" - ");
-	const gender = model.genders[0] || genderFromName;
-
-	return {
-		brand: model.brand,
-		description: model.description,
-		gender: gender,
-		name: name,
-	};
-}
-
-export function formatPrice({ style }: Pick<ProductDetailsResponse, "style">) {
-	return {
-		listPrice: style.price.listPrice,
-		salePrice: style.price.salePrice,
-		formattedListPrice: style.price.formattedListPrice,
-		formattedSalePrice: style.price.formattedSalePrice,
-	};
-}
-
-export function formatStyle({ style }: ProductDetailsResponse) {
-	return {
-		// active: style.active, // won't recieve data if not active [currently]
-		ageBuckets: style.ageBuckets,
-		color: style.color,
-		eligiblePaymentTypes: style.eligiblePaymentTypes,
-		flagsAndRestrictions: style.flagsAndRestrictions,
-		imageUrl: style.imageUrl,
-		launchAttributes: style.launchAttributes,
-		price: formatPrice({ style }),
-		sku: style.sku,
-		width: style.width,
-	};
-}
-
-export function formatProductDetails(data: ProductDetailsResponse) {
-	return {
-		colorways: formatColorways(data),
-		model: formatModel(data),
-		sizes: data.sizes.map(formatSize),
-		sizeChart: data.sizeChart,
-		style: formatStyle(data),
-	};
 }
