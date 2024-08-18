@@ -10,6 +10,7 @@ import type {
 export type Colorways = Record<Color, StyleVariant[]>;
 
 export type FormattedPdpSize = ReturnType<typeof formatSize>;
+export type FormattedProductPrice = ReturnType<typeof formatPrice>;
 
 export type ProductDetailsFormatted = ReturnType<typeof formatProductDetails>;
 
