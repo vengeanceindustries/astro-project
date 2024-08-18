@@ -45,7 +45,7 @@ export function PDP({ slots, ...props }: PdpProps) {
 				<div className="flex-1 lg:basis-1/3 p-4 bg-white">
 					<PdpHeader className="hidden md:block" model={model} />
 
-					<p className="my-2">
+					<p className="py-2">
 						<ProductPrice {...style.price} showSalePercent />
 					</p>
 

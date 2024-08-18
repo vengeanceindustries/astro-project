@@ -10,10 +10,19 @@ export function createSlot<SlotName extends string>() {
 	/**
 	 * Slot component typed to parentslot names, with name context
 	 */
-	function Slot({ children, name }: PropsWithChildren<{ name: SlotName }>) {
+	function Slot({
+		children,
+		name,
+		...rest
+	}: React.DetailedHTMLProps<
+		React.HTMLAttributes<HTMLDivElement>,
+		HTMLDivElement
+	> & { name: SlotName }) {
 		return (
 			<SlotContext.Provider value={name}>
-				<div data-id={`slot-${name}`}>{children}</div>
+				<div {...rest} data-id={`slot-${name}`}>
+					{children}
+				</div>
 			</SlotContext.Provider>
 		);
 	}
