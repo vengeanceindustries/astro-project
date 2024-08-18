@@ -1,4 +1,4 @@
-import type { FormattedProductPrice } from "@PNC/components/utils";
+import type { FormattedProductPrice } from "@PNC/utils";
 
 export function ProductPrice({
 	formattedListPrice,

@@ -1,7 +1,7 @@
+import type { ProductDetailsFormatted } from "@PNC/utils";
 import PDP, {
 	useSlot,
 	type PdpSlotName,
-	type ProductDetailsFormatted,
 } from "@PNC/layouts/ProductDetailsPage";
 
 export default function PdpWithSlots(data: ProductDetailsFormatted) {

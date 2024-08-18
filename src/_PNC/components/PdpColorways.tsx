@@ -1,6 +1,7 @@
 import clsx from "clsx";
-import { ProductImage, type ProductDetailsFormatted } from "@PNC/components";
-import type { Sku, StyleVariant } from "@PNC/layouts/ProductDetails";
+import { ProductImage } from "@PNC/components";
+import type { Sku, StyleVariant } from "@PNC/ProductDetails";
+import type { FormattedPdpModel, ProductDetailsFormatted } from "@PNC/utils";
 
 export function PdpColorwayLink({
 	model,
@@ -8,10 +9,11 @@ export function PdpColorwayLink({
 	variant,
 	variants,
 }: {
+	model: FormattedPdpModel;
 	selectedSku: Sku;
 	variant: StyleVariant;
 	variants: StyleVariant[];
-} & Pick<ProductDetailsFormatted, "model">) {
+}) {
 	const { color, sku } = variant;
 	const isSelected = selectedSku === sku;
 	const isActive =

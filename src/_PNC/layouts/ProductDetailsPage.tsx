@@ -8,9 +8,8 @@ import {
 	PdpHeader,
 	PdpSizes,
 	ProductPrice,
-	type ProductDetailsFormatted,
 } from "@PNC/components";
-export type { ProductDetailsFormatted };
+import type { ProductDetailsFormatted } from "@PNC/utils";
 
 export type PdpSlotName =
 	| "aboveAddToCart"

@@ -15,11 +15,7 @@ export function getProductImageSrc({ sku, src, ...rest }: ProductImageProps) {
 	return `https://images.footlocker.com/is/image/EBFL2/${sku}?wid=${width}&hei=${height}`;
 }
 
-export default function ProductImage({
-	className,
-	sku,
-	...rest
-}: ProductImageProps) {
+export function ProductImage({ className, sku, ...rest }: ProductImageProps) {
 	const src = getProductImageSrc({ sku, ...rest });
 	return (
 		<img
@@ -34,3 +30,5 @@ type ProductImageProps = { sku?: string } & React.DetailedHTMLProps<
 	React.ImgHTMLAttributes<HTMLImageElement>,
 	HTMLImageElement
 >;
+
+export default ProductImage;

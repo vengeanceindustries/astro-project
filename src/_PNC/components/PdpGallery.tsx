@@ -1,4 +1,5 @@
-import { ProductImage, type ProductDetailsFormatted } from "@PNC/components";
+import { ProductImage } from "@PNC/components";
+import type { ProductDetailsFormatted } from "@PNC/utils";
 import clsx from "clsx";
 
 const imgWidth = 550;

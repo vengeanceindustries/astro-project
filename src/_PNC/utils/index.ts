@@ -3,12 +3,13 @@ import type {
 	ProductDetailsResponse,
 	Size,
 	StyleVariant,
-} from "@PNC/layouts/ProductDetails";
+} from "@PNC/ProductDetails";
 
 // TYPES //
 
 export type Colorways = Record<Color, StyleVariant[]>;
 
+export type FormattedPdpModel = ReturnType<typeof formatModel>;
 export type FormattedPdpSize = ReturnType<typeof formatSize>;
 export type FormattedProductPrice = ReturnType<typeof formatPrice>;
 

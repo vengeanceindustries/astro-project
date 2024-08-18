@@ -1,18 +1,17 @@
-import ProductImage from "@PNC/components/ProductImage";
-import {
-	type FormattedPdpSize,
-	type ProductDetailsFormatted,
-} from "@PNC/components/utils";
-export { type FormattedPdpSize, type ProductDetailsFormatted, ProductImage };
+import { type FormattedPdpModel } from "@PNC/utils";
 export { PdpColorways } from "@PNC/components/PdpColorways";
 export { PdpGallery } from "@PNC/components/PdpGallery";
 export { PdpSizes } from "@PNC/components/PdpSizes";
+export { ProductImage } from "@PNC/components/ProductImage";
 export { ProductPrice } from "@PNC/components/ProductPrice";
 
 export function PdpHeader({
 	className,
 	model,
-}: { className: string } & Pick<ProductDetailsFormatted, "model">) {
+}: {
+	className: string;
+	model: FormattedPdpModel;
+}) {
 	return (
 		<header className={className}>
 			<h1 className="text-2xl font-black">{model.name}</h1>
