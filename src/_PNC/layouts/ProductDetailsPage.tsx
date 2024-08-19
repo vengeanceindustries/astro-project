@@ -52,13 +52,13 @@ export function PDP({ colorways, model, sizes, style, slots }: PdpProps) {
 						style={style}
 					/>
 
-					<pre className="text-xs [tab-size:1em]">
+					{/* <pre className="text-xs [tab-size:1em]">
 						{JSON.stringify(selectedSize, null, "\t")}
-					</pre>
+					</pre> */}
 
 					{slots?.shippingMessage}
 
-					<PdpFulfillment />
+					<PdpFulfillment /* selectedSize={selectedSize} */ />
 
 					{slots?.aboveAddToCart}
 
