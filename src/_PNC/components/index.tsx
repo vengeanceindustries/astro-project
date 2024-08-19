@@ -1,5 +1,6 @@
 import { type FormattedPdpModel } from "@PNC/utils";
 export { PdpColorways } from "@PNC/components/PdpColorways";
+export { PdpFulfillment } from "@PNC/components/PdpFulfillment";
 export { PdpGallery } from "@PNC/components/PdpGallery";
 export { PdpSizes } from "@PNC/components/PdpSizes";
 export { ProductImage } from "@PNC/components/ProductImage";
@@ -25,18 +26,6 @@ export function PdpHeader({
 				</a>
 			</p>
 		</header>
-	);
-}
-
-export function PdpFulfillment() {
-	return (
-		<>
-			<hr className="my-2" />
-			<fieldset>
-				<legend>Fulfillment method</legend>
-			</fieldset>
-			<hr className="my-2" />
-		</>
 	);
 }
 
