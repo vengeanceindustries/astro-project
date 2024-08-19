@@ -1,14 +1,26 @@
-import type {
-	FormattedPdpSize,
-	ProductDetailsFormatted,
-} from "@PNC/components";
+import type { FormattedPdpSize, ProductDetailsFormatted } from "@PNC/utils";
 import clsx from "clsx";
+import { useState } from "react";
+
+export function useSelectedSize<Elem extends HTMLInputElement>() {
+	const [selectedSize, setSize] = useState<FormattedPdpSize | undefined>();
+
+	function handleChange(sizeObj: FormattedPdpSize) {
+		return (e: React.ChangeEvent<Elem>) => {
+			console.log("handleChange", sizeObj);
+			setSize(sizeObj);
+		};
+	}
+	return [selectedSize, handleChange] as const;
+}
+
+type HandleChange = ReturnType<typeof useSelectedSize>[1];
 
 export function PdpSizeField({
-	onChange,
+	handleChange,
 	...size
 }: FormattedPdpSize & {
-	onChange: React.ChangeEventHandler<HTMLInputElement>;
+	handleChange: HandleChange;
 }) {
 	const disabled = !size.active || !size.inventory.inventoryAvailable;
 	return (
@@ -18,7 +30,7 @@ export function PdpSizeField({
 				className="peer sr-only"
 				disabled={disabled}
 				name="size"
-				onChange={onChange}
+				onChange={handleChange(size)}
 				type="radio"
 				value={size.size}
 			/>
@@ -41,11 +53,11 @@ export function PdpSizeField({
 }
 
 export function PdpSizes({
-	onChange,
+	handleChange,
 	sizes,
 	style,
 }: Pick<ProductDetailsFormatted, "sizes" | "style"> & {
-	onChange: React.ChangeEventHandler<HTMLInputElement>;
+	handleChange: HandleChange;
 }) {
 	if (!sizes?.length) {
 		return null;
@@ -61,7 +73,7 @@ export function PdpSizes({
 			<ul className="flex flex-wrap gap-2">
 				{sizes.map((size) => (
 					<li key={size.size} className="block">
-						<PdpSizeField {...size} onChange={onChange} />
+						<PdpSizeField {...size} handleChange={handleChange} />
 					</li>
 				))}
 			</ul>

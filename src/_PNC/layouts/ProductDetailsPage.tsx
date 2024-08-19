@@ -9,7 +9,8 @@ import {
 	PdpSizes,
 	ProductPrice,
 } from "@PNC/components";
-import type { ProductDetailsFormatted } from "@PNC/utils";
+import type { FormattedPdpSize, ProductDetailsFormatted } from "@PNC/utils";
+import { useSelectedSize } from "@PNC/components/PdpSizes";
 
 export type PdpSlotName =
 	| "aboveAddToCart"
@@ -19,18 +20,9 @@ export type PdpSlotName =
 
 export const { createChildrenSlots, Slot, useSlot } = createSlot<PdpSlotName>();
 
-function useSelectedSize<Elem extends HTMLInputElement>() {
-	const [selectedSize, setSize] = useState("");
-
-	const onChange: React.ChangeEventHandler<Elem> = (e) => {
-		setSize(e.currentTarget.value);
-	};
-	return [selectedSize, onChange] as const;
-}
-
 export function PDP({ colorways, model, sizes, style, slots }: PdpProps) {
 	// const { colorways, model, sizes, style } = formatProductDetails(props);
-	const [selectedSize, onChange] = useSelectedSize();
+	const [selectedSize, handleChange] = useSelectedSize();
 
 	return (
 		<>
@@ -51,10 +43,18 @@ export function PDP({ colorways, model, sizes, style, slots }: PdpProps) {
 
 					<PdpColorways
 						{...{ colorways, model, style }}
-						selectedSize={selectedSize}
+						selectedSize={selectedSize?.size}
 					/>
 
-					<PdpSizes onChange={onChange} sizes={sizes} style={style} />
+					<PdpSizes
+						handleChange={handleChange}
+						sizes={sizes}
+						style={style}
+					/>
+
+					<pre className="text-xs [tab-size:1em]">
+						{JSON.stringify(selectedSize, null, "\t")}
+					</pre>
 
 					{slots?.shippingMessage}
 
