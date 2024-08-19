@@ -40,14 +40,14 @@ export function createSlot<SlotName extends string>() {
 	 * provide slots object based on parent component's children
 	 */
 	function createChildrenSlots(children: React.ReactNode) {
-		const slots: { [N in SlotName]?: Nodes } & { content: Nodes } = {
-			content: [],
+		const slots: { [N in SlotName]?: Nodes } & { children: Nodes } = {
+			children: [],
 		};
 
 		React.Children.forEach(children, (child, i) => {
 			if (!React.isValidElement(child)) return;
 
-			if (child.type === Slot) {
+			if (child.type === Slot && child.props.children) {
 				const name = child.props.name as SlotName;
 				if (name in slots) {
 					(slots[name] as Nodes).push(child);
@@ -56,7 +56,7 @@ export function createSlot<SlotName extends string>() {
 				}
 				return;
 			}
-			slots.content.push(child);
+			slots.children.push(child);
 		});
 
 		return slots;

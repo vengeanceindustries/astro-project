@@ -1,4 +1,8 @@
+import { createSlot } from "@components/Slot";
 import clsx from "clsx";
+
+type SlotNames = "afterLabel";
+const { createChildrenSlots, Slot } = createSlot<SlotNames>();
 
 export function PdpFulfillmentInput({
 	children,
@@ -8,17 +12,16 @@ export function PdpFulfillmentInput({
 	HTMLInputElement
 >) {
 	const id = props.id || `${props.name}-${props.value}`;
+	const slots = createChildrenSlots(children);
 	return (
-		<label
+		<div
 			className={clsx(
-				"block peer p-4 rounded-md",
+				"block peer px-4 rounded-md",
 				"outline outline-1 outline-neutral-300",
-				"hover:outline-neutral-500",
 				"has-[:checked]:outline-black"
 			)}
-			htmlFor={id}
 		>
-			<div className="flex items-center">
+			<label className="flex items-center py-4" htmlFor={id}>
 				<input
 					{...props}
 					className="peer sr-only"
@@ -27,26 +30,31 @@ export function PdpFulfillmentInput({
 				/>
 				<span
 					className={clsx(
-						"relative block basis-6 h-6 rounded-full mr-4",
+						"relative block basis-5 h-5 rounded-full mr-4",
 						"outline outline-1 outline-neutral-600 outline-offset-4x",
 						"bg-white",
 						"hover:bg-neutral-100 peer-hover:bg-neutral-100",
+						"peer-focus:ring peer-focus:ring-purple-500",
 						"after:absolute after:inset-1 after:rounded-full",
 						"peer-checked:after:bg-black"
 					)}
 					data-id="radio-indicator"
 				/>
-				<div className="flex-1">{children}</div>
-			</div>
-		</label>
+				<div className="flex-1">{slots.children}</div>
+			</label>
+
+			{slots.afterLabel && (
+				<div className="ml-9 border-t py-4">{slots.afterLabel}</div>
+			)}
+		</div>
 	);
 }
 
 export function PdpFulfillment() {
 	return (
-		<fieldset>
+		<fieldset className="block my-4">
 			<legend className="sr-only">Fulfillment method</legend>
-			<ul className="flex flex-col gap-2">
+			<ul className="flex flex-col gap-3">
 				<li>
 					<PdpFulfillmentInput
 						defaultChecked
@@ -65,9 +73,29 @@ export function PdpFulfillment() {
 						<p className="text-xs">
 							Select your local store to grab your order
 						</p>
+
+						<Slot name="afterLabel">
+							<PdpBopisStore store={{ name: "Chicago" }} />
+						</Slot>
 					</PdpFulfillmentInput>
 				</li>
 			</ul>
 		</fieldset>
+	);
+}
+
+export function PdpBopisStore({ store }: { store: { name: string } }) {
+	return (
+		<div className="flex flex-wrap gap-1 justify-between">
+			<p className="uppercase font-semibold text-sm">{store.name}</p>
+			<p className="text-sm">
+				<a href="/store-locator" className="text-[#036ad8] underline">
+					Change store
+				</a>
+			</p>
+			<p className="text-xs grow">
+				We don’t have your size at this store
+			</p>
+		</div>
 	);
 }
