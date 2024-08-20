@@ -96,9 +96,11 @@ export function PdpBopisStore({ store }: { store: BopisStore }) {
 		}
 	}
 	return (
-		<div className="flex flex-wrap gap-1 justify-between">
-			<p className="uppercase font-semibold text-sm">{store.storeName}</p>
-			<p className="text-sm">
+		<div className="flex flex-col gap-1">
+			<p className="grow flex justify-between text-sm mb-1">
+				<strong className="uppercase font-semibold">
+					{store.storeName}
+				</strong>{" "}
 				<a href="/store-locator" className="text-[#036ad8] underline">
 					Change store
 				</a>
