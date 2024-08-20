@@ -29,7 +29,7 @@ const selectedSize = searchParams.get("size");
 	<h3 class="text-xl bg-green-500/30 mb-2">selectedSize? {selectedSize}</h3>
 	{
 		Object.keys(resp).map((key) => (
-			<details open={false} class="mx-2">
+			<details open={key === 'style'} class="mx-2">
 				<summary class="px-2 py-1 cursor-pointer">{key}</summary>
 				<pre class="text-xs"><!-- -->{JSON.stringify(resp[key], null, "\t")}<!-- --></pre>
 			</details>
