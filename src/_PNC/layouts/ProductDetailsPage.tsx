@@ -1,7 +1,7 @@
-import React, { useState, type PropsWithChildren } from "react";
+import React, { type PropsWithChildren } from "react";
 import { createSlot } from "@components/Slot";
 import {
-	PdpAddToCart,
+	AddToCart,
 	PdpColorways,
 	PdpFulfillment,
 	PdpGallery,
@@ -9,7 +9,7 @@ import {
 	PdpSizes,
 	ProductPrice,
 } from "@PNC/components";
-import type { FormattedPdpSize, ProductDetailsFormatted } from "@PNC/utils";
+import type { ProductDetailsFormatted } from "@PNC/utils";
 import { useSelectedSize } from "@PNC/components/PdpSizes";
 
 export type PdpSlotName =
@@ -46,23 +46,25 @@ export function PDP({ colorways, model, sizes, style, slots }: PdpProps) {
 						selectedSize={selectedSize?.size}
 					/>
 
-					<PdpSizes
-						handleChange={handleChange}
-						sizes={sizes}
-						style={style}
-					/>
+					<form action="#AddToCart">
+						<PdpSizes
+							handleChange={handleChange}
+							sizes={sizes}
+							style={style}
+						/>
 
-					{/* <pre className="text-xs [tab-size:1em]">
-						{JSON.stringify(selectedSize, null, "\t")}
-					</pre> */}
+						{/* <pre className="text-xs [tab-size:1em]">
+							{JSON.stringify(selectedSize, null, "\t")}
+						</pre> */}
 
-					{slots?.shippingMessage}
+						{slots?.shippingMessage}
 
-					<PdpFulfillment /* selectedSize={selectedSize} */ />
+						<PdpFulfillment /* selectedSize={selectedSize} */ />
 
-					{slots?.aboveAddToCart}
+						{slots?.aboveAddToCart}
 
-					<PdpAddToCart />
+						<AddToCart />
+					</form>
 
 					{slots?.belowAddToCart}
 				</div>
