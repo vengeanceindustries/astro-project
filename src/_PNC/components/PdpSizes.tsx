@@ -16,6 +16,25 @@ export function useSelectedSize<Elem extends HTMLInputElement>() {
 
 type HandleChange = ReturnType<typeof useSelectedSize>[1];
 
+export function PdpSizeIndicator(size: FormattedPdpSize) {
+	return (
+		<span
+			className={clsx(
+				"block py-2 px-2",
+				"bg-neutral-100 border border-transparent rounded",
+				"hover:border-black",
+				"peer-focus:ring peer-focus:ring-purple-500",
+				"peer-checked:bg-black peer-checked:text-white",
+				// "peer-aria-disabled:opacity-50 peer-aria-disabled:border-transparent peer-aria-disabled:cursor-not-allowed",
+				"peer-disabled:opacity-50 peer-disabled:border-transparent peer-disabled:cursor-not-allowed",
+				"peer-disabled:border-neutral-300 peer-disabled:bg-gradient-to-br from-[49%] from-white via-50% via-neutral-500 to-[51%] to-white"
+			)}
+		>
+			{Number(size.size).toFixed(1)}
+		</span>
+	);
+}
+
 export function PdpSizeField({
 	handleChange,
 	...size
@@ -34,20 +53,7 @@ export function PdpSizeField({
 				type="radio"
 				value={size.size}
 			/>
-			<span
-				className={clsx(
-					"block py-2 px-2",
-					"bg-neutral-100 border border-transparent rounded",
-					"hover:border-black",
-					"peer-focus:ring peer-focus:ring-purple-500",
-					"peer-checked:bg-black peer-checked:text-white",
-					// "peer-aria-disabled:opacity-50 peer-aria-disabled:border-transparent peer-aria-disabled:cursor-not-allowed",
-					"peer-disabled:opacity-50 peer-disabled:border-transparent peer-disabled:cursor-not-allowed",
-					"peer-disabled:border-neutral-300 peer-disabled:bg-gradient-to-br from-[49%] from-white via-50% via-neutral-500 to-[51%] to-white"
-				)}
-			>
-				{Number(size.size).toFixed(1)}
-			</span>
+			<PdpSizeIndicator {...size} />
 		</label>
 	);
 }
