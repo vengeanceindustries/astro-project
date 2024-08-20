@@ -1,10 +1,3 @@
-import type {
-	Color,
-	ProductDetailsResponse,
-	Size,
-	StyleVariant,
-} from "@PNC/ProductDetails";
-
 // TYPES //
 
 export type Colorways = Record<Color, StyleVariant[]>;
