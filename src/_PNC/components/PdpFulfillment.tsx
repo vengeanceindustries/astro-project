@@ -85,7 +85,7 @@ export function PdpFulfillment() {
 }
 
 export function PdpBopisStore({ store }: { store: BopisStore }) {
-	function getBopisStoreMessage() {
+	const text = (function getBopisStoreText() {
 		switch (true) {
 			case store.eligibleForBopis:
 				return "In-stock and available for pick up within 2 hours";
@@ -94,7 +94,7 @@ export function PdpBopisStore({ store }: { store: BopisStore }) {
 			default:
 				return `We don’t have your size at this store`;
 		}
-	}
+	})();
 	return (
 		<div className="flex flex-col gap-1">
 			<p className="grow flex justify-between text-sm mb-1">
@@ -105,7 +105,7 @@ export function PdpBopisStore({ store }: { store: BopisStore }) {
 					Change store
 				</a>
 			</p>
-			<p className="text-xs grow">{getBopisStoreMessage()}</p>
+			<p className="text-xs grow">{text}</p>
 		</div>
 	);
 }
