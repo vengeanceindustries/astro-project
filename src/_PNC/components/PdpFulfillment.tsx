@@ -75,7 +75,7 @@ export function PdpFulfillment() {
 						</p>
 
 						<Slot name="afterLabel">
-							<PdpBopisStore store={{ name: "Chicago" }} />
+							<PdpBopisStore store={exampleStore} />
 						</Slot>
 					</PdpFulfillmentInput>
 				</li>
@@ -84,18 +84,48 @@ export function PdpFulfillment() {
 	);
 }
 
-export function PdpBopisStore({ store }: { store: { name: string } }) {
+export function PdpBopisStore({ store }: { store: BopisStore }) {
+	function getBopisStoreMessage() {
+		switch (true) {
+			case store.eligibleForBopis:
+				return "In-stock and available for pick up within 2 hours";
+			case store.productAvailable:
+				return "Pickup in 3-5 Business Days.";
+			default:
+				return `We don’t have your size at this store`;
+		}
+	}
 	return (
 		<div className="flex flex-wrap gap-1 justify-between">
-			<p className="uppercase font-semibold text-sm">{store.name}</p>
+			<p className="uppercase font-semibold text-sm">{store.storeName}</p>
 			<p className="text-sm">
 				<a href="/store-locator" className="text-[#036ad8] underline">
 					Change store
 				</a>
 			</p>
-			<p className="text-xs grow">
-				We don’t have your size at this store
-			</p>
+			<p className="text-xs grow">{getBopisStoreMessage()}</p>
 		</div>
 	);
 }
+
+export const exampleStore = {
+	storeName: "Harlem Irving Plaza",
+	storeNumber: "0307228",
+	formattedAddress: "4184 North Harlem Avenue, Norridge, Illinois, 60706",
+	addressLine1: "4184 North Harlem Avenue",
+	addressLine2: " ",
+	addressLine3: " ",
+	phone: "708-453-0249",
+	state: "IL",
+	stateName: "Illinois",
+	zipCode: "60706",
+	city: "Norridge",
+	country: "US",
+	countryName: "United States",
+	latitude: 41.955869,
+	longitude: -87.809311,
+	formattedDistance: "2.5 Miles",
+	status: "Open",
+	eligibleForBopis: true,
+	productAvailable: false,
+};
