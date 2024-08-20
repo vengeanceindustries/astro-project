@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import { ProductImage } from "@PNC/components";
-import type { Sku, StyleVariant } from "@PNC/ProductDetails";
 import type { FormattedPdpModel, ProductDetailsFormatted } from "@PNC/utils";
 
 export function PdpColorwayLink({
