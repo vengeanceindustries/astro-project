@@ -11,17 +11,20 @@ const data = Astro.locals;
 <Layout title="Welcome to Astro.">
 	<main>
 		<pre>{data.title}</pre>
-		<p>PRIVATE INFO about the current user</p>
+		<!-- <p>PRIVATE INFO about the current user</p> -->
 		<AstroLogo />
 		<h1 class="my-16">
 			Welcome to <span class="text-gradient">My Project</span>
 		</h1>
 		<p class="instructions">
-			To get started, open the directory <code>src/pages</code> in your project.<br
-			/>
-			<strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message
-			above.
+			To get started, open the directory <code>src/pages</code> in your project.<br />
+			<strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message above.
 		</p>
+		<p>
+			Product Page: <a href="/en/product/nike-air-force-1-07-le-mens/W2288111">Nike Air Force 1 '07 LE - Men's</a>
+		</p>
+		<hr class="my-4" />
+
 		<ViewCounter />
 		<MyComponent prefix="What is up?" />
 		<p class="mb-6">
@@ -64,10 +67,7 @@ const data = Astro.locals;
 	.instructions {
 		margin-bottom: 2rem;
 		border: 1px solid rgba(var(--accent-light), 25%);
-		background: linear-gradient(
-			rgba(var(--accent-dark), 66%),
-			rgba(var(--accent-dark), 33%)
-		);
+		background: linear-gradient(rgba(var(--accent-dark), 66%), rgba(var(--accent-dark), 33%));
 		padding: 1.5rem;
 		border-radius: 8px;
 	}
