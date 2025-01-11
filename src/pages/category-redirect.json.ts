@@ -15,6 +15,7 @@ export async function GET(ctx: APIContext) {
 	const headers: HeadersInit = { "x-api-lang": locale };
 
 	const results = await fetch(route, { headers }).then((r) => r.json());
+	console.log("redirect?", { route, headers }, results);
 
 	if (!results) {
 		return new Response(null, {
