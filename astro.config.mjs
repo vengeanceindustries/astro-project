@@ -28,11 +28,17 @@ export default defineConfig({
 				path: "it",
 				codes: ["it", "it-IT"],
 			},
-			{
-				path: "ko",
-				codes: ["ko", "ko-KR"],
-			},
+			// {
+			// 	path: "ko",
+			// 	codes: ["ko", "ko-KR"],
+			// },
 		],
+		fallback: {
+			de: "en",
+			fr: "en",
+			it: "en",
+			// ko: "en",
+		},
 		routing: "manual",
 		// routing: {
 		// 	prefixDefaultLocale: false,
