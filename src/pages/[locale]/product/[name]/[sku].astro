@@ -33,7 +33,7 @@ const selectedSize = searchParams.get("size");
 	<p class="">SKU: {sku}</p>
 
 	{hasErrors && <h1 class="text-2xl">Sorry, product not found</h1>}
-	<PdpWithSlots client:visible={!hasErrors} {...data} />
+	{!hasErrors && <PdpWithSlots client:visible={!hasErrors} {...data} />}
 
 	{!hasErrors && <h3 class="text-xl bg-green-500/30 mb-2">selectedSize? {selectedSize}</h3>}
 	{
