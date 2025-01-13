@@ -1,15 +1,11 @@
 ---
-import { BANNER_DEFAULT, banners, SITE_ID_COOKIE } from "@utils/banner.configs";
+import { BANNER_COOKIE, BANNER_DEFAULT, banners, getBannerFromId, SITE_ID_COOKIE } from "@utils/banner.configs";
+const SITE_ID = SITE_ID_COOKIE;
 
-let siteId = BANNER_DEFAULT;
-const cookie = Astro.cookies.get(SITE_ID_COOKIE);
-if (cookie) {
-	siteId = cookie.value;
-	console.log("STORED site id:", siteId);
-} else {
-	console.log("DEFAULT site id:", siteId);
-	Astro.cookies.set(SITE_ID_COOKIE, siteId);
-}
+let siteId = Astro.url.searchParams.get(SITE_ID) || Astro.cookies.get(SITE_ID)?.value || BANNER_DEFAULT;
+const banner = getBannerFromId(siteId);
+Astro.cookies.set(SITE_ID, siteId, { path: "/" });
+Astro.cookies.set(BANNER_COOKIE, banner, { path: "/" });
 
 if (Astro.request.method) {
 	console.log("Astro.request.method:", Astro.request.method);
@@ -17,9 +13,9 @@ if (Astro.request.method) {
 if (Astro.request.method === "POST") {
 	try {
 		const data = await Astro.request.formData();
-		const val = data.get(SITE_ID_COOKIE)?.toString();
+		const val = data.get(SITE_ID)?.toString();
 		if (val) {
-			Astro.cookies.set(SITE_ID_COOKIE, val);
+			Astro.cookies.set(SITE_ID, val, { path: "/" });
 			siteId = val;
 			console.log("BannerSetForm POST:", { siteId });
 		}
@@ -33,8 +29,8 @@ if (Astro.request.method === "POST") {
 
 <div class="p-2 bg-slate-400 text-slate-950 flex justify-between align-middle">
 	<p class="leading-relaxed">Current Banner: <code>{JSON.stringify(siteId)}</code></p>
-	<form method="POST" class="inline-block outline-1 outline-red-500">
-		<select name={SITE_ID_COOKIE} class="text-sm py-[0.335em] px-2">
+	<form class="inline-block outline-1 outline-red-500">
+		<select name={SITE_ID} class="text-sm py-[0.335em] px-2">
 			{
 				Object.values(banners).map((banner) => (
 					<option value={banner.siteId} selected={banner.siteId === siteId}>

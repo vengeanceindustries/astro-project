@@ -31,7 +31,7 @@ export const banners = {
 		siteId: "FLCA",
 	},
 	KFL: {
-		bannerType: "LFL",
+		bannerType: "KFL",
 		defaultCountry: "US",
 		host: "kidsfootlocker.com",
 		name: "Kids Foot Locker",

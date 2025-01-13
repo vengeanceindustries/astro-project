@@ -1,7 +1,7 @@
 ---
 import FooterNav from "@layouts/FooterNav.astro";
 import HeaderNav from "./HeaderNav.astro";
-import BannerSetForm from "@components/BannerSetForm.astro";
+import BannerSetForm from "@BANNER/BannerSetForm.astro";
 import { getBannerFromId, SITE_ID_COOKIE } from "@utils/banner.configs";
 // import { ViewTransitions } from "astro:transitions";
 
@@ -13,7 +13,6 @@ interface Props {
 
 const cookie = Astro.cookies.get(SITE_ID_COOKIE);
 const banner = getBannerFromId(cookie?.value);
-const bannerName = banner.name;
 const { canonical, description = "This is an Astro project", title } = Astro.props;
 ---
 
@@ -26,7 +25,7 @@ const { canonical, description = "This is an Astro project", title } = Astro.pro
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="canonical" href={canonical} />
 		<!-- <meta name="generator" content={Astro.generator} /> -->
-		<title>{title} | {bannerName}</title>
+		<title>{title} | {banner.name}</title>
 		<slot name="head" />
 		<!-- <ViewTransitions /> -->
 	</head>

@@ -1,0 +1,11 @@
+---
+import { BANNER_COOKIE, getBannerFromId, SITE_ID_COOKIE } from "@utils/banner.configs";
+
+// const siteId = Astro.url.searchParams.get(SITE_ID_COOKIE) || Astro.cookies.get(SITE_ID_COOKIE)?.value;
+const cookie = Astro.cookies.get(BANNER_COOKIE)?.value;
+const banner = cookie && JSON.parse(cookie);
+// console.log("bannerObj:", bannerObj?.value);
+// const banner = getBannerFromId(siteId);
+---
+
+{banner.name}
