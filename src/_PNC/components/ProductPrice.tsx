@@ -1,12 +1,14 @@
 import type { FormattedProductPrice } from "@PNC/utils";
 
 export function ProductPrice({
+	className,
 	formattedListPrice,
 	formattedSalePrice,
 	listPrice,
 	salePrice,
 	showSalePercent = true,
 }: FormattedProductPrice & {
+	className?: string | undefined;
 	showSalePercent?: boolean;
 }) {
 	console.log("Price:", { listPrice, salePrice });
@@ -16,15 +18,15 @@ export function ProductPrice({
 			: undefined;
 		// console.log("Price:", { salePercent });
 		return (
-			<p>
+			<p className={className}>
 				<ins className="text-lg no-underline text-red-600 mr-2">
 					{formattedSalePrice}
 				</ins>
 				<del className="text-sm">{formattedListPrice}</del>{" "}
 				{salePercent && (
-					<div className="text-xs text-red-700">
+					<span className="text-xs text-red-700">
 						{salePercent}% off
-					</div>
+					</span>
 				)}
 			</p>
 		);

@@ -11,7 +11,7 @@ export type ProductDetailsFormatted = ReturnType<typeof formatProductDetails>;
 // UTILS //
 
 export function formatColorways(data: ProductDetailsResponse) {
-	return data.styleVariants.reduce((all, variant) => {
+	return data.styleVariants?.reduce((all, variant) => {
 		if (all[variant.color]) {
 			all[variant.color].push(variant);
 		} else {
@@ -29,12 +29,10 @@ export function formatSize(size: Size) {
 		productWebKey: size.productWebKey,
 		active: size.active,
 		inventory: {
-			dropshipInventoryAvailable:
-				size.inventory.dropshipInventoryAvailable,
+			dropshipInventoryAvailable: size.inventory.dropshipInventoryAvailable,
 			inventoryAvailable: size.inventory.inventoryAvailable,
 			storeInventoryAvailable: size.inventory.storeInventoryAvailable,
-			warehouseInventoryAvailable:
-				size.inventory.warehouseInventoryAvailable,
+			warehouseInventoryAvailable: size.inventory.warehouseInventoryAvailable,
 		},
 	};
 }
