@@ -3,8 +3,10 @@ import { banners, setBannerFromAstro, SITE_ID_COOKIE } from "@utils/banner.confi
 const SITE_ID = SITE_ID_COOKIE;
 
 const banner = setBannerFromAstro(Astro);
-const locale = Astro.currentLocale;
+const locale = Astro.currentLocale!;
 console.log("currentLocale:", { locale });
+const action = undefined; // `/${locale}/`;
+const method = undefined; // "POST";
 
 /** with <form method="POST" /> */
 // if (Astro.request.method === "POST") {
@@ -28,7 +30,7 @@ console.log("currentLocale:", { locale });
 
 <div class="p-2 bg-slate-400 text-slate-950 flex justify-between align-middle">
 	<p class="leading-relaxed">Current Banner: <code>{JSON.stringify(banner.siteId)}</code></p>
-	<form action=`/${locale}/` class="inline-block outline-1 outline-red-500">
+	<form action={action} method={method} class="inline-block outline-1 outline-red-500">
 		<label>
 			<span class="text-sm opacity-80">Change banner:</span>
 			<select name={SITE_ID} class="text-sm py-[0.335em] px-2">
