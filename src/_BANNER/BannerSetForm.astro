@@ -3,9 +3,7 @@ import { banners, setBannerFromAstro, SITE_ID_COOKIE } from "@utils/banner.confi
 const SITE_ID = SITE_ID_COOKIE;
 
 const banner = setBannerFromAstro(Astro);
-const locale = Astro.currentLocale!;
-console.log("currentLocale:", { locale });
-const action = undefined; // `/${locale}/`;
+const action = undefined; // `/${Astro.currentLocale}/`;
 const method = undefined; // "POST";
 
 /** with <form method="POST" /> */
