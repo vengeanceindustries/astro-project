@@ -2,7 +2,7 @@
 import FooterNav from "@layouts/FooterNav.astro";
 import HeaderNav from "./HeaderNav.astro";
 import BannerSetForm from "@BANNER/BannerSetForm.astro";
-import { getBannerFromId, SITE_ID_COOKIE } from "@utils/banner.configs";
+import { getBannerFromAstro } from "@utils/banner.configs";
 // import { ViewTransitions } from "astro:transitions";
 
 interface Props {
@@ -10,10 +10,9 @@ interface Props {
 	description?: string;
 	title: string;
 }
-
-const cookie = Astro.cookies.get(SITE_ID_COOKIE);
-const banner = getBannerFromId(cookie?.value);
 const { canonical, description = "This is an Astro project", title } = Astro.props;
+
+const banner = getBannerFromAstro(Astro);
 ---
 
 <!doctype html>

@@ -1,4 +1,4 @@
-import type { APIContext, AstroCookies } from "astro";
+import type { APIContext, AstroCookies, AstroGlobal } from "astro";
 
 /**
  * Banner Detection Scenarios
@@ -40,6 +40,7 @@ export const banners = {
 };
 
 export const BANNER_DEFAULT = "FL";
+export const BANNER_COOKIE = "banner";
 export const SITE_ID_COOKIE = "siteId";
 
 export function getBannerFromId(id: string | undefined): typeof banners.FL {
@@ -76,4 +77,35 @@ export function getBannerConfigFromHost(hostname: string) {
 export function getBannerFromHost(hostname: string) {
 	const obj = Object.values(banners).find((b) => b.host === hostname);
 	return obj?.siteId || BANNER_DEFAULT;
+}
+/**
+ * 1) get siteId from search params, eg `?siteId=FLCA`; derive banner object
+ * 2) get stored banner object cookie & parse
+ * 3) get banner object from stored siteId cookie; derive banner object
+ */
+export function getBannerFromAstro({ cookies, url }: Pick<AstroGlobal, "cookies" | "url">) {
+	let banner = {} as ReturnType<typeof getBannerFromId>;
+
+	const objCookie = cookies.get(BANNER_COOKIE)?.value;
+	const searchParam = url.searchParams.get(SITE_ID_COOKIE);
+
+	if (!searchParam && objCookie) {
+		banner = JSON.parse(objCookie);
+	} else {
+		const idCookie = cookies.get(SITE_ID_COOKIE)?.value;
+		banner = getBannerFromId(searchParam || idCookie);
+	}
+	return banner;
+}
+
+export function setBannerFromAstro({ cookies, url }: Pick<AstroGlobal, "cookies" | "url">) {
+	let siteId = url.searchParams.get(SITE_ID_COOKIE) || cookies.get(SITE_ID_COOKIE)?.value || BANNER_DEFAULT;
+	// console.log("BannerSetForm", Astro.request.method, { siteId });
+	cookies.set(SITE_ID_COOKIE, siteId, { path: "/" });
+
+	let banner = getBannerFromId(siteId);
+	// console.log("BannerSetForm banner:", banner);
+	cookies.set(BANNER_COOKIE, banner, { path: "/" });
+
+	return banner;
 }

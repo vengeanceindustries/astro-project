@@ -1,44 +1,46 @@
 ---
-import { BANNER_COOKIE, BANNER_DEFAULT, banners, getBannerFromId, SITE_ID_COOKIE } from "@utils/banner.configs";
+import { banners, setBannerFromAstro, SITE_ID_COOKIE } from "@utils/banner.configs";
 const SITE_ID = SITE_ID_COOKIE;
 
-let siteId = Astro.url.searchParams.get(SITE_ID) || Astro.cookies.get(SITE_ID)?.value || BANNER_DEFAULT;
-const banner = getBannerFromId(siteId);
-Astro.cookies.set(SITE_ID, siteId, { path: "/" });
-Astro.cookies.set(BANNER_COOKIE, banner, { path: "/" });
+const banner = setBannerFromAstro(Astro);
+const locale = Astro.currentLocale;
+console.log("currentLocale:", { locale });
 
-if (Astro.request.method) {
-	console.log("Astro.request.method:", Astro.request.method);
-}
-if (Astro.request.method === "POST") {
-	try {
-		const data = await Astro.request.formData();
-		const val = data.get(SITE_ID)?.toString();
-		if (val) {
-			Astro.cookies.set(SITE_ID, val, { path: "/" });
-			siteId = val;
-			console.log("BannerSetForm POST:", { siteId });
-		}
-	} catch (err) {
-		if (err instanceof Error) {
-			console.error(err.message);
-		}
-	}
-}
+/** with <form method="POST" /> */
+// if (Astro.request.method === "POST") {
+// 	try {
+// 		const data = await Astro.request.formData();
+// 		const val = data.get(SITE_ID)?.toString();
+// 		if (val) {
+// 			Astro.cookies.set(SITE_ID, val, { path: "/" });
+// 			siteId = val;
+// 			let banner = getBannerFromId(siteId);
+// 			Astro.cookies.set(BANNER, banner, { path: "/" });
+// 			console.log("BannerSetForm POST:", { siteId }, banner);
+// 		}
+// 	} catch (err) {
+// 		if (err instanceof Error) {
+// 			console.error("❌", err.message);
+// 		}
+// 	}
+// }
 ---
 
 <div class="p-2 bg-slate-400 text-slate-950 flex justify-between align-middle">
-	<p class="leading-relaxed">Current Banner: <code>{JSON.stringify(siteId)}</code></p>
-	<form class="inline-block outline-1 outline-red-500">
-		<select name={SITE_ID} class="text-sm py-[0.335em] px-2">
-			{
-				Object.values(banners).map((banner) => (
-					<option value={banner.siteId} selected={banner.siteId === siteId}>
-						{banner.host}
-					</option>
-				))
-			}
-		</select>
+	<p class="leading-relaxed">Current Banner: <code>{JSON.stringify(banner.siteId)}</code></p>
+	<form action=`/${locale}/` class="inline-block outline-1 outline-red-500">
+		<label>
+			<span class="text-sm opacity-80">Change banner:</span>
+			<select name={SITE_ID} class="text-sm py-[0.335em] px-2">
+				{
+					Object.values(banners).map(({ host, siteId }) => (
+						<option value={siteId} selected={siteId === banner.siteId}>
+							{host}
+						</option>
+					))
+				}
+			</select>
+		</label>
 		<button class="text-sm py-1 px-2 bg-white" type="submit">→</button>
 	</form>
 </div>
