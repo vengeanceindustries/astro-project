@@ -4,35 +4,36 @@ import Layout from "@layouts/Layout.astro";
 import PdpWithSlots from "@layouts/PdpWithSlots";
 import { getBannerDomain } from "@utils/banner.configs";
 
-const sku = Astro.params.sku?.split(".html")?.[0] || "";
-// const name = Astro.params.name?.replace(/-/g, " ");
-const locale = Astro.currentLocale || "en-US";
+console.log("Astro.params", Astro.params);
+let sku = Astro.params.sku?.split(".html")?.[0]!;
+let name = Astro.params.name?.replace(/-/g, " ")!;
+const locale = (Astro.preferredLocale || Astro.currentLocale)!;
 const bannerDomain = getBannerDomain(Astro);
 // const route = `${Astro.url.origin}/product/details.json?sku=${sku}`;
 const route = `${bannerDomain}/zgw/product-core/v1/pdp/sku/${sku}`;
 const headers: HeadersInit = { "x-api-lang": locale };
 const resp = await fetch(route, { headers }).then((r) => r.json());
 
-console.log("SKU", { route, resp: Object.keys(resp) });
+// console.log("SKU", { route, resp: Object.keys(resp) });
 const hasErrors = "errors" in resp;
 const data = hasErrors ? resp : formatProductDetails(resp);
+if (!hasErrors) {
+	name = data?.model?.name!;
+	sku = data?.style?.sku!;
+}
+console.log("SKU", { route, data: Object.keys(data) });
 
 const searchParams = Astro.url.searchParams;
 // console.log("searchParams?", searchParams.keys());
 const selectedSize = searchParams.get("size");
 ---
 
-<Layout title={hasErrors ? `404: Product not found` : data.model.name}>
-	<p class="">Name: {data?.model?.name || Astro.params.name}</p>
-	<p class="">SKU: {data?.style?.sku || Astro.params.sku}</p>
+<Layout title={hasErrors ? `404: Product not found` : name}>
+	<p class="">Name: {name}</p>
+	<p class="">SKU: {sku}</p>
 
-	{
-		hasErrors ? (
-			<h1 class="text-2xl">Sorry, product not found</h1>
-		) : (
-			<PdpWithSlots client:visible={!!data} {...data} />
-		)
-	}
+	{hasErrors && <h1 class="text-2xl">Sorry, product not found</h1>}
+	<PdpWithSlots client:visible={!hasErrors} {...data} />
 
 	{!hasErrors && <h3 class="text-xl bg-green-500/30 mb-2">selectedSize? {selectedSize}</h3>}
 	{

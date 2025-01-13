@@ -11,7 +11,7 @@ export function ProductPrice({
 	className?: string | undefined;
 	showSalePercent?: boolean;
 }) {
-	console.log("Price:", { listPrice, salePrice });
+	// console.log("Price:", { listPrice, salePrice });
 	if (salePrice < listPrice) {
 		const salePercent = showSalePercent
 			? Math.round(((listPrice - salePrice) / salePrice) * 100)
