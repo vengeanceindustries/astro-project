@@ -1,6 +1,11 @@
 import React, { type PropsWithChildren } from "react";
 import { createContext, useContext } from "react";
 
+export type SlotProps<SlotName extends string> = React.DetailedHTMLProps<
+	React.HTMLAttributes<HTMLDivElement>,
+	HTMLDivElement
+> & { name: SlotName };
+
 /**
  * create typed 'slots' object for parent, Slot component, and useSlot context hook
  */
@@ -10,14 +15,7 @@ export function createSlot<SlotName extends string>() {
 	/**
 	 * Slot component typed to parentslot names, with name context
 	 */
-	function Slot({
-		children,
-		name,
-		...rest
-	}: React.DetailedHTMLProps<
-		React.HTMLAttributes<HTMLDivElement>,
-		HTMLDivElement
-	> & { name: SlotName }) {
+	function Slot({ children, name, ...rest }: SlotProps<SlotName>) {
 		return (
 			<SlotContext.Provider value={name}>
 				<div {...rest} data-id={`slot-${name}`}>
@@ -46,9 +44,10 @@ export function createSlot<SlotName extends string>() {
 
 		React.Children.forEach(children, (child, i) => {
 			if (!React.isValidElement(child)) return;
+			const props = child.props as SlotProps<SlotName>;
 
-			if (child.type === Slot && child.props.children) {
-				const name = child.props.name as SlotName;
+			if (child.type === Slot && props?.children) {
+				const name = props.name as SlotName;
 				if (name in slots) {
 					(slots[name] as Nodes).push(child);
 				} else {
