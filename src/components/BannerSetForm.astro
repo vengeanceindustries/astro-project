@@ -1,0 +1,48 @@
+---
+import { BANNER_DEFAULT, banners, SITE_ID_COOKIE } from "@utils/banner.configs";
+
+let siteId = BANNER_DEFAULT;
+const cookie = Astro.cookies.get(SITE_ID_COOKIE);
+if (cookie) {
+	siteId = cookie.value;
+	console.log("STORED site id:", siteId);
+} else {
+	console.log("DEFAULT site id:", siteId);
+	Astro.cookies.set(SITE_ID_COOKIE, siteId);
+}
+
+if (Astro.request.method) {
+	console.log("Astro.request.method:", Astro.request.method);
+}
+if (Astro.request.method === "POST") {
+	try {
+		const data = await Astro.request.formData();
+		const val = data.get(SITE_ID_COOKIE)?.toString();
+		if (val) {
+			Astro.cookies.set(SITE_ID_COOKIE, val);
+			siteId = val;
+			console.log("BannerSetForm POST:", { siteId });
+		}
+	} catch (err) {
+		if (err instanceof Error) {
+			console.error(err.message);
+		}
+	}
+}
+---
+
+<div class="p-2 bg-slate-400 text-slate-950 flex justify-between align-middle">
+	<p class="leading-relaxed">Current Banner: <code>{JSON.stringify(siteId)}</code></p>
+	<form method="POST" class="inline-block outline-1 outline-red-500">
+		<select name={SITE_ID_COOKIE} class="text-sm py-[0.335em] px-2">
+			{
+				Object.values(banners).map((banner) => (
+					<option value={banner.siteId} selected={banner.siteId === siteId}>
+						{banner.host}
+					</option>
+				))
+			}
+		</select>
+		<button class="text-sm py-1 px-2 bg-white" type="submit">→</button>
+	</form>
+</div>

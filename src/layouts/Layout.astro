@@ -1,6 +1,8 @@
 ---
 import FooterNav from "@layouts/FooterNav.astro";
 import HeaderNav from "./HeaderNav.astro";
+import BannerSetForm from "@components/BannerSetForm.astro";
+import { getBannerFromId, SITE_ID_COOKIE } from "@utils/banner.configs";
 // import { ViewTransitions } from "astro:transitions";
 
 interface Props {
@@ -9,12 +11,10 @@ interface Props {
 	title: string;
 }
 
-const bannerName = "Foot Locker";
-const {
-	canonical,
-	description = "This is an Astro project",
-	title,
-} = Astro.props;
+const cookie = Astro.cookies.get(SITE_ID_COOKIE);
+const banner = getBannerFromId(cookie?.value);
+const bannerName = banner.name;
+const { canonical, description = "This is an Astro project", title } = Astro.props;
 ---
 
 <!doctype html>
@@ -32,6 +32,7 @@ const {
 	</head>
 
 	<body>
+		<BannerSetForm />
 		<!-- <HeaderNav /> -->
 		<slot />
 		<!-- <FooterNav /> -->
@@ -43,12 +44,7 @@ const {
 		--accent: 136, 58, 234;
 		--accent-light: 224, 204, 250;
 		--accent-dark: 49, 10, 101;
-		--accent-gradient: linear-gradient(
-			45deg,
-			rgb(var(--accent)),
-			rgb(var(--accent-light)) 30%,
-			white 60%
-		);
+		--accent-gradient: linear-gradient(45deg, rgb(var(--accent)), rgb(var(--accent-light)) 30%, white 60%);
 	}
 	html {
 		font-family: system-ui, sans-serif;

@@ -4,17 +4,21 @@ import AstroLogo from "@components/AstroLogo.astro";
 import Card from "@components/Card.astro";
 import MyComponent from "@components/MyComponent.astro";
 import ViewCounter from "@components/ViewCounter.astro";
+import { getBannerFromId, SITE_ID_COOKIE } from "@utils/banner.configs";
 
 const data = Astro.locals;
+
+const cookie = Astro.cookies.get(SITE_ID_COOKIE);
+console.log("Astro.cookies.banner:", cookie);
+const banner = getBannerFromId(cookie?.value);
+console.log("banner object:", banner);
 ---
 
-<Layout title="Welcome to Astro.">
+<Layout title="Welcome to Astro">
 	<main>
-		<pre>{data.title}</pre>
-		<!-- <p>PRIVATE INFO about the current user</p> -->
 		<AstroLogo />
 		<h1 class="my-16">
-			Welcome to <span class="text-gradient">My Project</span>
+			Welcome to <span class="text-gradient">{banner.name}</span>
 		</h1>
 		<p class="instructions">
 			To get started, open the directory <code>src/pages</code> in your project.<br />

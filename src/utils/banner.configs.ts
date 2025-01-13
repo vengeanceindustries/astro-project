@@ -40,8 +40,9 @@ export const banners = {
 };
 
 export const BANNER_DEFAULT = "FL";
+export const SITE_ID_COOKIE = "siteId";
 
-export function getBannerFromId(id: string): typeof banners.FL {
+export function getBannerFromId(id: string | undefined): typeof banners.FL {
 	return banners[id as keyof typeof banners] || banners[BANNER_DEFAULT];
 }
 
@@ -54,7 +55,7 @@ export function getBannerHost({ cookies, site, url }: APIContext) {
 	const hostname = getValidHostname(url);
 	if (hostname) return hostname;
 
-	const cookie = cookies?.get("FL_BANNER_ID")?.value;
+	const cookie = cookies?.get(SITE_ID_COOKIE)?.value;
 	const id = cookie || import.meta.env.PUBLIC_BANNER;
 	return getBannerFromId(id)?.host;
 }
