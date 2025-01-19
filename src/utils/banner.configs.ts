@@ -1,12 +1,6 @@
 import type { APIContext, AstroCookies, AstroGlobal } from "astro";
 
-/**
- * Banner Detection Scenarios
- * ==========================
- * DATA:
- * server request => host => domain
- * window location => host => domain
- */
+type Banners = Record<SiteId, Banner>;
 
 export const banners = {
 	CS: {
@@ -15,6 +9,13 @@ export const banners = {
 		host: "champssports.com",
 		name: "Champs Sports",
 		siteId: "CS",
+	},
+	CSCA: {
+		bannerType: "CS",
+		defaultCountry: "CA",
+		host: "champssports.ca",
+		name: "Champs Sports Canada",
+		siteId: "CSCA",
 	},
 	FL: {
 		bannerType: "FL",
@@ -37,10 +38,9 @@ export const banners = {
 		name: "Kids Foot Locker",
 		siteId: "KFL",
 	},
-};
+} as Banners;
 
 export const BANNER_DEFAULT = "FL";
-export const BANNER_COOKIE = "banner";
 export const SITE_ID_COOKIE = "siteId";
 
 export function getBannerFromId(id: string | undefined): typeof banners.FL {
@@ -83,29 +83,22 @@ export function getBannerFromHost(hostname: string) {
  * 2) get stored banner object cookie & parse
  * 3) get banner object from stored siteId cookie; derive banner object
  */
-export function getBannerFromAstro({ cookies, url }: Pick<AstroGlobal, "cookies" | "url">) {
-	let banner = {} as ReturnType<typeof getBannerFromId>;
-
-	const objCookie = cookies.get(BANNER_COOKIE)?.value;
-	const searchParam = url.searchParams.get(SITE_ID_COOKIE);
-
-	if (!searchParam && objCookie) {
-		banner = JSON.parse(objCookie);
-	} else {
-		const idCookie = cookies.get(SITE_ID_COOKIE)?.value;
-		banner = getBannerFromId(searchParam || idCookie);
-	}
+export function getBannerFromAstro(context: AstroGlobal) {
+	const siteId = context.params.siteId?.toUpperCase();
+	console.log("getBannerFromAstro", { siteId });
+	let banner = getBannerFromId(siteId);
 	return banner;
 }
 
-export function setBannerFromAstro({ cookies, url }: Pick<AstroGlobal, "cookies" | "url">) {
-	let siteId = url.searchParams.get(SITE_ID_COOKIE) || cookies.get(SITE_ID_COOKIE)?.value || BANNER_DEFAULT;
-	// console.log("BannerSetForm", Astro.request.method, { siteId });
-	cookies.set(SITE_ID_COOKIE, siteId, { path: "/" });
+export function setBannerFromAstro(context: APIContext) {
+	const siteId = context.params.siteId?.toUpperCase();
+	const locale = context.params.locale ?? context.currentLocale ?? context.preferredLocale!;
+	const banner = getBannerFromId(siteId);
+	const isBannerMatch = banner?.siteId === siteId;
+	console.log("setBannerFromAstro", { siteId, locale, isBannerMatch }, banner);
+	// context.locals.banner = banner;
 
-	let banner = getBannerFromId(siteId);
-	// console.log("BannerSetForm banner:", banner);
-	cookies.set(BANNER_COOKIE, banner, { path: "/" });
-
-	return banner;
+	if (!isBannerMatch) {
+		return context.redirect(`/${banner?.siteId}/${locale}/`);
+	}
 }

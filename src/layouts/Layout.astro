@@ -2,7 +2,6 @@
 import FooterNav from "@layouts/FooterNav.astro";
 import HeaderNav from "./HeaderNav.astro";
 import BannerSetForm from "@BANNER/BannerSetForm.astro";
-import { getBannerFromAstro } from "@utils/banner.configs";
 // import { ViewTransitions } from "astro:transitions";
 
 interface Props {
@@ -12,7 +11,7 @@ interface Props {
 }
 const { canonical, description = "This is an Astro project", title } = Astro.props;
 
-const banner = getBannerFromAstro(Astro);
+const banner = Astro.locals.banner;
 ---
 
 <!doctype html>
@@ -30,7 +29,7 @@ const banner = getBannerFromAstro(Astro);
 	</head>
 
 	<body>
-		<BannerSetForm />
+		{import.meta.env.DEV && <BannerSetForm />}
 		<!-- <HeaderNav /> -->
 		<slot />
 		<!-- <FooterNav /> -->

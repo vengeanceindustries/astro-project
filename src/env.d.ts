@@ -1,5 +1,6 @@
 /// <reference path="../.astro/types.d.ts" />
 /// <reference types="astro/client" />
+/// <reference types="./utils/banner.configs.d.ts" />
 
 interface ImportMetaEnv {
 	readonly PUBLIC_BANNER: string;
@@ -12,6 +13,7 @@ interface ImportMeta {
 
 declare namespace App {
 	interface Locals {
+		banner: Banner;
 		title: string;
 	}
 }

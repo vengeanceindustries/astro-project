@@ -4,28 +4,33 @@ import AstroLogo from "@components/AstroLogo.astro";
 import Card from "@components/Card.astro";
 import MyComponent from "@components/MyComponent.astro";
 import ViewCounter from "@components/ViewCounter.astro";
-import BannerName from "@BANNER/BannerName.astro";
+
+const banner = Astro.locals.banner;
+const siteId = Astro.params.siteId?.toUpperCase();
+const locale = Astro.params.locale!;
+const aboutLink = `/${siteId}/${locale}/about`;
+const pdpLink = `/${siteId}/${locale}/product/nike-air-force-1-07-le-mens/W2288111`;
 ---
 
 <Layout title="Welcome to Astro">
 	<main>
 		<AstroLogo />
 		<h1 class="my-16">
-			Welcome to <span class="text-gradient"><BannerName /></span>
+			Welcome to <span class="text-gradient">{banner.name}</span>
 		</h1>
 		<p class="instructions">
 			To get started, open the directory <code>src/pages</code> in your project.<br />
 			<strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message above.
 		</p>
 		<p>
-			Product Page: <a href="/en/product/nike-air-force-1-07-le-mens/W2288111">Nike Air Force 1 '07 LE - Men's</a>
+			Product Page: <a href={pdpLink}>Nike Air Force 1 '07 LE - Men's</a>
 		</p>
 		<hr class="my-4" />
 
 		<ViewCounter />
 		<MyComponent prefix="What is up?" />
 		<p class="mb-6">
-			<a href="/about" class="">
+			<a href={aboutLink}>
 				Learn more <strong>About</strong> this project
 			</a>
 		</p>

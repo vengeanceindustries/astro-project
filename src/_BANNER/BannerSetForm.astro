@@ -1,46 +1,36 @@
 ---
-import { banners, setBannerFromAstro, SITE_ID_COOKIE } from "@utils/banner.configs";
-const SITE_ID = SITE_ID_COOKIE;
+import { banners, getBannerFromId } from "@utils/banner.configs";
 
-const banner = setBannerFromAstro(Astro);
-const action = undefined; // `/${Astro.currentLocale}/`;
-const method = undefined; // "POST";
+const locale = Astro.params.locale ?? Astro.currentLocale ?? Astro.preferredLocale!;
 
-/** with <form method="POST" /> */
-// if (Astro.request.method === "POST") {
-// 	try {
-// 		const data = await Astro.request.formData();
-// 		const val = data.get(SITE_ID)?.toString();
-// 		if (val) {
-// 			Astro.cookies.set(SITE_ID, val, { path: "/" });
-// 			siteId = val;
-// 			let banner = getBannerFromId(siteId);
-// 			Astro.cookies.set(BANNER, banner, { path: "/" });
-// 			console.log("BannerSetForm POST:", { siteId }, banner);
-// 		}
-// 	} catch (err) {
-// 		if (err instanceof Error) {
-// 			console.error("❌", err.message);
-// 		}
-// 	}
-// }
+const siteId = Astro.params.siteId?.toUpperCase();
+let banner = getBannerFromId(siteId);
 ---
 
-<div class="p-2 bg-slate-400 text-slate-950 flex justify-between align-middle">
+<div class="p-2 bg-slate-400 text-slate-950 flex justify-between align-middle text-xs">
 	<p class="leading-relaxed">Current Banner: <code>{JSON.stringify(banner.siteId)}</code></p>
-	<form action={action} method={method} class="inline-block outline-1 outline-red-500">
-		<label>
-			<span class="text-sm opacity-80">Change banner:</span>
-			<select name={SITE_ID} class="text-sm py-[0.335em] px-2">
-				{
-					Object.values(banners).map(({ host, siteId }) => (
-						<option value={siteId} selected={siteId === banner.siteId}>
-							{host}
-						</option>
-					))
-				}
-			</select>
-		</label>
-		<button class="text-sm py-1 px-2 bg-white" type="submit">→</button>
-	</form>
+	<details>
+		<summary>{banner.host}</summary>
+		<ul class="bg-white text-black shadow absolute right-1 mt-1 z-10 p-2 pl-6 text-sm">
+			{
+				Object.values(banners).map(({ host, siteId }) => {
+					const selected = siteId === banner.siteId;
+					return (
+						<li
+							aria-selected={selected}
+							class={selected ? "list-[disclosure-closed] opacity-80" : "list-disc"}
+						>
+							{selected ? (
+								host
+							) : (
+								<a class="text-sky-800 hover:text-black" href={`/${siteId}/${locale}/`}>
+									{host}
+								</a>
+							)}
+						</li>
+					);
+				})
+			}
+		</ul>
+	</details>
 </div>
