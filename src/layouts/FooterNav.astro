@@ -1,16 +1,9 @@
 ---
-import type { Footer, FooterResponse } from "src/pages/api/footer.json";
+import type { Footer } from "src/pages/api/footer.json";
 
 const route = `${Astro.url.origin}/api/footer.json`;
 const results: Footer = await fetch(route).then((r) => r.json());
-const {
-	affiliates,
-	callouts,
-	footerLinks,
-	properties,
-	quickLinks,
-	socialLinks,
-} = results;
+const { affiliates, callouts, footerLinks, properties, quickLinks, socialLinks } = results;
 ---
 
 <footer class="flex flex-col">
@@ -19,19 +12,8 @@ const {
 			{
 				quickLinks?.map(({ image, isNewWindow, label, url }) => (
 					<li>
-						<a
-							class="flex flex-col gap-1 p-2"
-							href={url}
-							target={isNewWindow ? "_blank" : "_self"}
-						>
-							<img
-								src={image}
-								alt=""
-								class="m-auto"
-								height={40}
-								width={40}
-							/>{" "}
-							{label}
+						<a class="flex flex-col gap-1 p-2" href={url} target={isNewWindow ? "_blank" : "_self"}>
+							<img src={image} alt="" class="m-auto" height={40} width={40} /> {label}
 						</a>
 					</li>
 				))
@@ -46,10 +28,7 @@ const {
 					<ul>
 						{group.links.map(({ desc, isNewWindow, url }) => (
 							<li>
-								<a
-									href={url}
-									target={isNewWindow ? "_blank" : "_self"}
-								>
+								<a href={url} target={isNewWindow ? "_blank" : "_self"}>
 									{desc}
 								</a>
 							</li>
@@ -60,11 +39,9 @@ const {
 		}
 	</nav>
 </footer>
-<pre class="text-xs"
-	>{JSON.stringify({
+<pre class="text-xs">{JSON.stringify({
 	affiliates,
 	callouts,
 	properties,
 	socialLinks,
-}, null, "\t")}</pre
->
+}, null, "\t")}</pre>

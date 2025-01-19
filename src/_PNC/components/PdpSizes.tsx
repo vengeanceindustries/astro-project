@@ -6,11 +6,7 @@ export function useSelectedSize() {
 	const [selectedSize, setSize] = useState<FormattedPdpSize | undefined>();
 
 	function handleChange(sizeObj: FormattedPdpSize) {
-		return (
-			e:
-				| React.ChangeEvent<HTMLElement>
-				| React.MouseEvent<HTMLButtonElement>
-		) => {
+		return () => {
 			console.log("handleChange", sizeObj);
 			setSize(sizeObj);
 		};

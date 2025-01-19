@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren } from "react";
+import React from "react";
 import { createContext, useContext } from "react";
 
 export type SlotProps<SlotName extends string> = React.DetailedHTMLProps<
@@ -42,7 +42,7 @@ export function createSlot<SlotName extends string>() {
 			children: [],
 		};
 
-		React.Children.forEach(children, (child, i) => {
+		React.Children.forEach(children, (child) => {
 			if (!React.isValidElement(child)) return;
 			const props = child.props as SlotProps<SlotName>;
 

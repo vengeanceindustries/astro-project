@@ -1,5 +1,5 @@
 ---
-import Layout from "@layouts/Layout.astro";
+// import Layout from "@layouts/Layout.astro";
 
 export interface PageResponse {
 	// aemPageTitle: string;
@@ -31,8 +31,8 @@ if (!page || isApi) {
 		statusText: "This is not an API page",
 	});
 }
-const slug = page.split(".")[0];
-const route = `${Astro.url.origin}/api/page.${slug}.json`;
+// const slug = page.split(".")[0];
+// const route = `${Astro.url.origin}/api/page.${slug}.json`;
 // let resp: PageResponse;
 // try {
 // 	resp = await fetch(route).then((r) => r.json());
@@ -46,8 +46,7 @@ const route = `${Astro.url.origin}/api/page.${slug}.json`;
 // const { components, metaDescription, persona, seoCanonicalURL, title } = resp;
 ---
 
-<pre
-	class="text-xs">
+<pre class="text-xs">
 	{JSON.stringify({page, currentLocale, preferredLocale, preferredLocaleList}, null, "\t")}
 </pre>
 <!-- <Layout canonical={seoCanonicalURL} description={metaDescription} title={title}>
