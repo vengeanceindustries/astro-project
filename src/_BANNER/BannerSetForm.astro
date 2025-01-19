@@ -2,9 +2,11 @@
 import { banners, getBannerFromId } from "@utils/banner.configs";
 
 const locale = Astro.params.locale ?? Astro.currentLocale ?? Astro.preferredLocale!;
-
 const siteId = Astro.params.siteId?.toUpperCase();
 let banner = getBannerFromId(siteId);
+
+const pathname = Astro.url.pathname;
+const path = pathname.replace(RegExp(`\^/${banner.siteId}/${locale}/`), "");
 ---
 
 <div class="p-2 bg-slate-400 text-slate-950 flex justify-between align-middle text-xs">
@@ -23,7 +25,7 @@ let banner = getBannerFromId(siteId);
 							{selected ? (
 								host
 							) : (
-								<a class="text-sky-800 hover:text-black" href={`/${siteId}/${locale}/`}>
+								<a class="text-sky-800 hover:text-black" href={`/${siteId}/${locale}/${path}`}>
 									{host}
 								</a>
 							)}

@@ -4,7 +4,7 @@ import Layout from "@layouts/Layout.astro";
 import PdpWithSlots from "@layouts/PdpWithSlots";
 import { getBannerDomain } from "@utils/banner.configs";
 
-console.log("Astro.params", Astro.params);
+// console.log("Astro.params", Astro.params);
 let sku = Astro.params.sku?.split(".html")?.[0]!;
 let name = Astro.params.name?.replace(/-/g, " ")!;
 const locale = (Astro.preferredLocale || Astro.currentLocale)!;
@@ -21,7 +21,7 @@ if (!hasErrors) {
 	name = data?.model?.name!;
 	sku = data?.style?.sku!;
 }
-console.log("SKU", { route, data: Object.keys(data) });
+// console.log("SKU", { route, data: Object.keys(data) });
 
 const searchParams = Astro.url.searchParams;
 // console.log("searchParams?", searchParams.keys());
