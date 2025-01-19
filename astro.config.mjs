@@ -1,12 +1,14 @@
 import { defineConfig } from "astro/config";
-import netlify from "@astrojs/netlify";
+import node from "@astrojs/node";
 import partytown from "@astrojs/partytown";
 import react from "@astrojs/react";
 import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
-	adapter: netlify(),
+	adapter: node({
+		mode: "standalone",
+	}),
 	output: "server",
 	i18n: {
 		defaultLocale: "en",
