@@ -1,4 +1,4 @@
-import type { APIContext, AstroCookies, AstroGlobal } from "astro";
+import type { APIContext, AstroGlobal } from "astro";
 
 type Banners = Record<SiteId, Banner>;
 
@@ -52,7 +52,7 @@ export function getValidHostname(url: URL) {
 	return banner?.host;
 }
 
-export function getBannerHost({ cookies, site, url }: APIContext) {
+export function getBannerHost({ cookies, url }: APIContext) {
 	const hostname = getValidHostname(url);
 	if (hostname) return hostname;
 

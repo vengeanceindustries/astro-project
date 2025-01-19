@@ -13,7 +13,7 @@ export function Card(props: React.PropsWithChildren) {
 	let footer = [] as React.ReactNode[];
 	let content = [] as React.ReactNode[];
 
-	React.Children.forEach(props.children, (child, i) => {
+	React.Children.forEach(props.children, (child) => {
 		if (!React.isValidElement(child)) return;
 		// const kid = { ...child, key: child.type.toString() + i };
 

@@ -1,6 +1,5 @@
 import type { APIContext } from "astro";
 import { getBannerDomain } from "@utils/banner.configs";
-import type { ValueOf } from "node_modules/astro/dist/type-utils";
 
 export interface FooterResponse {
 	footer: Footer[];
@@ -88,7 +87,7 @@ export async function GET(ctx: APIContext) {
 		});
 	}
 
-	const data = footer.reduce((all, item, i) => {
+	const data = footer.reduce((all, item) => {
 		const [key, val] = Object.entries(item)[0];
 		all[key as keyof Footer] = val;
 		return all;

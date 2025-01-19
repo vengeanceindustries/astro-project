@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren } from "react";
+import React from "react";
 import { createSlot } from "@components/Slot";
 import {
 	AddToCart,
@@ -77,7 +77,7 @@ export function PDP({ colorways, model, sizes, style, slots }: PdpProps) {
 export function PdpWithChildren({
 	children,
 	...props
-}: PropsWithChildren<ProductDetailsFormatted>) {
+}: React.PropsWithChildren<ProductDetailsFormatted>) {
 	const slots = createChildrenSlots(children);
 	return <PDP {...props} slots={slots} />;
 }
