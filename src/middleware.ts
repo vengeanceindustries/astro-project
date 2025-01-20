@@ -11,8 +11,8 @@ const bannerDetection = defineMiddleware(async (context, next) => {
 	context.locals.banner = banner;
 
 	if (!isBannerMatch || !locale) {
-		const locale = context.currentLocale ?? context.preferredLocale!;
-		return context.redirect(`/${banner.siteId}/${locale}/`);
+		// const locale = context.currentLocale ?? context.preferredLocale!;
+		// return context.redirect(`/${banner.siteId}/${locale}/`);
 	}
 	return next();
 });
@@ -31,10 +31,7 @@ const bannerDetection = defineMiddleware(async (context, next) => {
 // 		// props: context.props,
 // 		// preferredLocale: context.preferredLocale,
 // 		// preferredLocaleList: context.preferredLocaleList,
-// 		// redirect: context.redirect, // func
 // 		// request: context.request,
-// 		// rewrite: context.rewrite, // func
-// 		// site: context.site,
 // 		// url: context.url,
 // 	});
 // 	console.log("validation response");

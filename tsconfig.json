@@ -5,6 +5,7 @@
 		"paths": {
 			"@components/*": ["src/components/*"],
 			"@layouts/*": ["src/layouts/*"],
+			"@loaders/*": ["src/loaders/*"],
 			"@BANNER/*": ["src/_BANNER/*"],
 			"@LOY/*": ["src/_LOY/*"],
 			"@PNC/*": ["src/_PNC/*"],

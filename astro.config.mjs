@@ -56,7 +56,6 @@ export default defineConfig({
 		}),
 	],
 	server: { headers: {}, open: "/" },
-	site: "https://www.footlocker.com", // @TODO: an integration that handles this per banner?
 	domains: {
 		"de": "https://www.footlocker.de",
 		"fr": "https://www.footlocker.fr",
