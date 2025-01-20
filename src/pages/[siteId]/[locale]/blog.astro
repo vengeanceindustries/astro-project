@@ -1,5 +1,6 @@
 ---
-export const prerender = true;
+// export const prerender = true;
+import { fetchHeader } from "@loaders/headerLoader";
 // import Layout from "@layouts/Layout.astro";
 // import ReactSlotLayout from "@layouts/ReactSlotLayout";
 
@@ -9,6 +10,7 @@ import { banners } from "@utils/banner.configs";
 // import { fetchPosts } from "@loaders/placeholderLoader";
 
 // const countries = await fetchCountries();
+const header = await fetchHeader();
 const jokes = await fetchJokes();
 // const posts = await fetchPosts();
 
@@ -24,8 +26,8 @@ export function getStaticPaths() {
 	</h1>
 	<!-- <ReactSlotLayout client:visible /> -->
 
+	<pre class="text-sm">header: {JSON.stringify(header, null, 2)}</pre>
 	<!-- <pre class="text-sm">COUNTRIES: {JSON.stringify(countries, null, 2)}</pre> -->
-	<!-- <pre class="text-sm">jokes: {JSON.stringify(jokes, null, 2)}</pre> -->
 	<!-- <pre class="text-sm">posts: {JSON.stringify(posts, null, 2)}</pre> -->
 	<h2 class="text-2xl">jokes!</h2>
 	<ul class="list-decimal list-outside ml-6">

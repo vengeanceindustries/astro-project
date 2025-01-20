@@ -1,12 +1,17 @@
 import { defineCollection } from "astro:content";
-import { countryLoader } from "@loaders/countryLoader";
+// import { countryLoader } from "@loaders/countryLoader";
+import { headerLoader } from "@loaders/headerLoader";
 import { jokeLoader } from "@loaders/jokeLoader";
-import { placeholderLoader } from "@loaders/placeholderLoader";
-// import { randomUserLoader } from '@loaders/randomUserLoader';
+// import { placeholderLoader } from "@loaders/placeholderLoader";
 
-const countries = defineCollection({
+// const countries = defineCollection({
+// 	type: "data",
+// 	schema: countryLoader(),
+// });
+
+const header = defineCollection({
 	type: "data",
-	schema: countryLoader(),
+	schema: headerLoader(),
 });
 
 const jokes = defineCollection({
@@ -14,10 +19,10 @@ const jokes = defineCollection({
 	schema: jokeLoader(),
 });
 
-const posts = defineCollection({
-	type: "data",
-	schema: placeholderLoader(),
-});
+// const posts = defineCollection({
+// 	type: "data",
+// 	schema: placeholderLoader(),
+// });
 
 // const randomUsers = defineCollection({
 // 	type: "data",
@@ -25,8 +30,9 @@ const posts = defineCollection({
 // });
 
 export const collections = {
-	countries,
+	// countries,
+	header,
 	jokes,
-	posts,
+	// posts,
 	// randomUsers,
 };
